@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Camping gear", "words": ["TENT", "LANTERN", "COMPASS", "COOLER"], "difficulty": 0 },
+		{ "category": "Side ___", "words": ["KICK", "LINE", "TRACK", "BURN"], "difficulty": 1 },
+		{ "category": "Things that can be stuffed", "words": ["TURKEY", "ANIMAL", "PEPPER", "BALLOT"], "difficulty": 2 },
+		{ "category": "Words containing a music genre", "words": ["FUNKY", "POPPET", "WRAPPER", "JAZZED"], "difficulty": 3 }
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you pop", "words": ["BALLOON", "CORN", "BUBBLE", "COLLAR"], "difficulty": 0 },
+		{ "category": "___ mark", "words": ["BOOK", "CHECK", "QUESTION", "BIRTH"], "difficulty": 1 },
+		{ "category": "Raw ___", "words": ["DEAL", "TALENT", "NERVE", "EMOTION"], "difficulty": 2 },
+		{ "category": "___jack", "words": ["BLACK", "FLAP", "CAR", "LUMBER"], "difficulty": 3 }
+	]
+}

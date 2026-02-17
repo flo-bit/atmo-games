@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things at a wedding", "words": ["VEIL", "CAKE", "TOAST", "BOUQUET"], "difficulty": 0 },
+		{ "category": "Blank ___", "words": ["CHECK", "SLATE", "SPACE", "STARE"], "difficulty": 1 },
+		{ "category": "Words after 'eye'", "words": ["BROW", "LASH", "LID", "LINER"], "difficulty": 2 },
+		{ "category": "Homophones of body parts", "words": ["HEEL", "WASTE", "NAVEL", "MUSSEL"], "difficulty": 3 }
+	]
+}

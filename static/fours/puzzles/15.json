@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Pizza toppings", "words": ["OLIVE", "PEPPER", "ONION", "MUSHROOM"], "difficulty": 0 },
+    { "category": "Types of memory", "words": ["FLASH", "MUSCLE", "SHORT", "SCREEN"], "difficulty": 1 },
+    { "category": "Tight ___", "words": ["ROPE", "END", "SHIP", "KNIT"], "difficulty": 2 },
+    { "category": "First names hidden in the word", "words": ["HIJACK", "VITAMIN", "SALIVA", "THEOREM"], "difficulty": 3 }
+  ]
+}

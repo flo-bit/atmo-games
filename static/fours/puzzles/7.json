@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Breakfast items", "words": ["TOAST", "WAFFLE", "CEREAL", "PANCAKE"], "difficulty": 0 },
+    { "category": "Also a dance", "words": ["SWING", "TWIST", "HUSTLE", "SALSA"], "difficulty": 1 },
+    { "category": "Nail ___", "words": ["POLISH", "GUN", "BED", "BITER"], "difficulty": 2 },
+    { "category": "Homophones of numbers", "words": ["WON", "ATE", "FORE", "SICS"], "difficulty": 3 }
+  ]
+}

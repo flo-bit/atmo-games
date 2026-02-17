@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things at the beach", "words": ["TOWEL", "UMBRELLA", "SHELL", "SURFBOARD"], "difficulty": 0 },
+    { "category": "Rock ___", "words": ["BOTTOM", "BAND", "CLIMBING", "SOLID"], "difficulty": 1 },
+    { "category": "Ways to say \"great\"", "words": ["SICK", "WICKED", "KILLER", "FIRE"], "difficulty": 2 },
+    { "category": "State postal codes", "words": ["MEAD", "COAL", "DEAL", "MAIN"], "difficulty": 3 }
+  ]
+}

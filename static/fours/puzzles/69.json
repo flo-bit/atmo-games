@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that rust", "words": ["IRON", "NAIL", "CHAIN", "GATE"], "difficulty": 0 },
+		{ "category": "Dead ___", "words": ["LINE", "END", "LOCK", "BEAT"], "difficulty": 1 },
+		{ "category": "___ season", "words": ["DEER", "OPEN", "AWARDS", "TAX"], "difficulty": 2 },
+		{ "category": "Slang for 'crazy'", "words": ["NUTS", "BANANAS", "CRACKERS", "CUCKOO"], "difficulty": 3 }
+	]
+}

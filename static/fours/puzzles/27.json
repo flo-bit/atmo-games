@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Dog breeds", "words": ["BOXER", "POINTER", "PUG", "SETTER"], "difficulty": 0 },
+    { "category": "Back ___", "words": ["FIRE", "LOG", "STAGE", "BONE"], "difficulty": 1 },
+    { "category": "Things that can be electric", "words": ["FENCE", "SLIDE", "EEL", "CHAIR"], "difficulty": 2 },
+    { "category": "Words containing a drink", "words": ["STALEMATE", "ALEWIFE", "WINESAP", "RUMBLE"], "difficulty": 3 }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things in space", "words": ["COMET", "ASTEROID", "NEBULA", "QUASAR"], "difficulty": 0 },
+		{ "category": "Light ___", "words": ["HOUSE", "WEIGHT", "YEAR", "SPEED"], "difficulty": 1 },
+		{ "category": "Things that can be loaded", "words": ["GUN", "DICE", "QUESTION", "BAKED"], "difficulty": 2 },
+		{ "category": "Words where each letter appears exactly twice", "words": ["NOON", "DEED", "TOOT", "PEEP"], "difficulty": 3 }
+	]
+}

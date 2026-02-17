@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that are round", "words": ["WHEEL", "GLOBE", "PIZZA", "COIN"], "difficulty": 0 },
+		{ "category": "Break ___", "words": ["THROUGH", "FAST", "DOWN", "NECK"], "difficulty": 1 },
+		{ "category": "Words meaning 'nonsense'", "words": ["GARBAGE", "RUBBISH", "BALONEY", "HOGWASH"], "difficulty": 2 },
+		{ "category": "Chess pieces", "words": ["KING", "BISHOP", "ROOK", "KNIGHT"], "difficulty": 3 }
+	]
+}

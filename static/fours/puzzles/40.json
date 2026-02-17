@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Types of cake", "words": ["POUND", "SPONGE", "ANGEL", "BUNDT"], "difficulty": 0 },
+		{ "category": "Top ___", "words": ["NOTCH", "SOIL", "SECRET", "KNOT"], "difficulty": 1 },
+		{ "category": "Things that have a bark", "words": ["TREE", "DOG", "CINNAMON", "MULCH"], "difficulty": 2 },
+		{ "category": "Words containing a compass direction", "words": ["NORTHWEST", "LEAST", "FEWEST", "SOUTH"], "difficulty": 3 }
+	]
+}

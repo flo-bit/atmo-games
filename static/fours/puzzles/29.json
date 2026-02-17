@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things with wings", "words": ["PLANE", "ANGEL", "BUTTERFLY", "BUILDING"], "difficulty": 0 },
+    { "category": "Iron ___", "words": ["CURTAIN", "MAN", "MAIDEN", "CLAD"], "difficulty": 1 },
+    { "category": "Words that follow \"eye\"", "words": ["BROW", "LASH", "SHADOW", "WITNESS"], "difficulty": 2 },
+    { "category": "Spoonerisms of famous people", "words": ["BELLY JEANS", "BONY LAIR", "RAN SOLO", "PARK SHARK"], "difficulty": 3 }
+  ]
+}

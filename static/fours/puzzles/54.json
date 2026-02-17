@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a lid", "words": ["POT", "EYE", "JAR", "COFFIN"], "difficulty": 0 },
+		{ "category": "Night ___", "words": ["OWL", "SHIFT", "FALL", "MARE"], "difficulty": 1 },
+		{ "category": "Words before 'work'", "words": ["FRAME", "NET", "TEAM", "CLOCK"], "difficulty": 2 },
+		{ "category": "Two words hiding inside", "words": ["CARPET", "KIDNAP", "NOWHERE", "UNDERSTAND"], "difficulty": 3 }
+	]
+}

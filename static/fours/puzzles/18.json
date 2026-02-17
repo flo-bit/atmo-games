@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Furniture", "words": ["BENCH", "DRESSER", "CABINET", "STOOL"], "difficulty": 0 },
+    { "category": "Things that are seeded", "words": ["PLAYER", "GRAPE", "LAWN", "CLOUD"], "difficulty": 1 },
+    { "category": "Cross ___", "words": ["WORD", "BOW", "FIT", "WALK"], "difficulty": 2 },
+    { "category": "Sounds like a greeting", "words": ["HI", "YELLOW", "HOWDY", "SUP"], "difficulty": 3 }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things with keys", "words": ["PIANO", "LOCK", "MAP", "KEYBOARD"], "difficulty": 0 },
+    { "category": "Spring ___", "words": ["BREAK", "BOARD", "ROLL", "CHICKEN"], "difficulty": 1 },
+    { "category": "Ways to cook", "words": ["GRILL", "ROAST", "SMOKE", "TOAST"], "difficulty": 2 },
+    { "category": "Also means to question", "words": ["QUIZ", "PUMP", "PRESS", "DRILL"], "difficulty": 3 }
+  ]
+}

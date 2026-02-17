@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with frames", "words": ["PICTURE", "GLASSES", "DOOR", "BICYCLE"], "difficulty": 0 },
+		{ "category": "Half ___", "words": ["TIME", "BACK", "HEARTED", "PIPE"], "difficulty": 1 },
+		{ "category": "Things that can be rough", "words": ["DRAFT", "DIAMOND", "PATCH", "SKETCH"], "difficulty": 2 },
+		{ "category": "Words that sound like letters + numbers", "words": ["CANINE", "FORTUNE", "TENNIS", "SEASON"], "difficulty": 3 }
+	]
+}

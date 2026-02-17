@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things at a carnival", "words": ["RIDES", "COTTON", "POPCORN", "CLOWN"], "difficulty": 0 },
+    { "category": "Point ___", "words": ["BLANK", "GUARD", "BREAK", "SPREAD"], "difficulty": 1 },
+    { "category": "Words after \"high\"", "words": ["LIGHT", "CHAIR", "FIVE", "NOON"], "difficulty": 2 },
+    { "category": "Spelled-out keyboard symbols", "words": ["DASH", "SLASH", "TILDE", "POUND"], "difficulty": 3 }
+  ]
+}

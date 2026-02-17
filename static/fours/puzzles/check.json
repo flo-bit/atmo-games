@@ -1,0 +1,72 @@
+[
+  {
+    "puzzle": "4.json",
+    "incorrect_categories": ["Anagram of a color"],
+    "reasonings": ["Only LUBE -> BLUE is a valid anagram. DEAR (D,E,A,R) has no 4-letter color anagram. ROWED (R,O,W,E,D) has no 5-letter color anagram. VIOL (V,I,O,L) has no 4-letter color anagram. 3 of 4 words are broken."]
+  },
+  {
+    "puzzle": "5.json",
+    "incorrect_categories": ["Hidden tree"],
+    "reasonings": ["ASH is correctly hidden in ASHAMED. But BELIEVE (B-E-L-I-E-V-E) contains no tree as consecutive letters. DISPLAY (D-I-S-P-L-A-Y) contains no tree as consecutive letters. HEMLOCK is itself a tree but doesn't contain a different hidden tree (ELM would need E-L-M but the letters are E-M-L)."]
+  },
+  {
+    "puzzle": "10.json",
+    "incorrect_categories": ["Contains a number"],
+    "reasonings": ["OFTEN has TEN, FREIGHT has EIGHT, TENSE has TEN -- all consecutive. But WONDERFUL (W-O-N-D-E-R-F-U-L) has no number as consecutive letters. ONE would need O-N-E but there's a D between N and E (O-N-D-E-R)."]
+  },
+  {
+    "puzzle": "19.json",
+    "incorrect_categories": ["Countries hidden in the word"],
+    "reasonings": ["GERMANY trivially works (it IS a country). But MIRACLE (M-I-R-A-C-L-E) has no country as consecutive letters -- IRAQ would need Q not C. THERAPIST (T-H-E-R-A-P-I-S-T) has no country as consecutive letters. SPANISH (S-P-A-N-I-S-H) does not contain SPAIN -- SPAIN is S-P-A-I-N but SPANISH has S-P-A-N-I (N and I are swapped)."]
+  },
+  {
+    "puzzle": "20.json",
+    "incorrect_categories": ["Two words that sound like one word"],
+    "reasonings": ["FOUR CHIN -> fortune, LACK HER -> lacquer, CAR GO -> cargo all work as two-word phrases that sound like a single word. But MUSTARD is already a single word, not two words. It breaks the pattern entirely -- the other three entries have spaces separating two real words."]
+  },
+  {
+    "puzzle": "24.json",
+    "incorrect_categories": ["Short ___ / Things with layers (duplicate)", "Words where removing first letter gives an animal"],
+    "reasonings": ["CAKE appears in both 'Short ___' (shortcake) and 'Things with layers' -- a word cannot be in two groups, making the puzzle structurally broken with only 15 unique words.", "Only CRAM -> RAM works. BEAST -> EAST is not an animal. TOWER -> OWER is not an animal. GOAT -> OAT is not an animal. 3 of 4 words fail."]
+  },
+  {
+    "puzzle": "29.json",
+    "incorrect_categories": ["Spoonerisms of famous people"],
+    "reasonings": ["The spoonerisms don't cleanly produce famous people. BONY LAIR is a loose approximation of Tony Blair but a proper spoonerism of Tony Blair would be 'Blony Tair'. BELLY JEANS swaps to JELLY BEANS (not a person). RAN SOLO doesn't spoonerize to Han Solo (H/S swap gives SAN HOLO). PARK SHARK doesn't resolve to any identifiable famous person."]
+  },
+  {
+    "puzzle": "31.json",
+    "incorrect_categories": ["Words where removing last letter gives a planet"],
+    "reasonings": ["MARSH -> MARS and EARTHY -> EARTH work. VENUSE -> VENUS works mechanically but VENUSE is not a real English word. SATURN is already a planet -- removing its last letter gives SATUR, which is not a planet. The word should have been something like SATURNS or SATURNINE."]
+  },
+  {
+    "puzzle": "34.json",
+    "incorrect_categories": ["Currencies hidden in the word"],
+    "reasonings": ["COMPOUND contains POUND and RANDOM contains RAND. But SCRAMBLE (S-C-R-A-M-B-L-E) contains no recognizable currency as consecutive letters -- RUBLE would need R-U-B-L-E but SCRAMBLE has R-A-M-B-L-E. YEN is just the currency itself rather than a word with a currency hidden inside it, which is inconsistent with the category concept."]
+  },
+  {
+    "puzzle": "36.json",
+    "incorrect_categories": ["Words that become food when reversed"],
+    "reasonings": ["The entire category is broken. TUNA reversed is ANUT (not a food). MAYS reversed is SYAM (not a food -- MAYS is an anagram of YAMS but not a reversal). GULP reversed is PLUG (not a food). WARD reversed is DRAW (not a food). Zero of 4 words work."]
+  },
+  {
+    "puzzle": "38.json",
+    "incorrect_categories": ["Anagrams of US states"],
+    "reasonings": ["HAUT -> UTAH and TAXES -> TEXAS work. But HOWL (H,O,W,L) does not anagram to any US state -- closest is IOWA (I,O,W,A) but letters don't match. AIMED (A,I,M,E,D) does not anagram to any US state -- closest is MAINE (M,A,I,N,E) but D vs N mismatch."]
+  },
+  {
+    "puzzle": "43.json",
+    "incorrect_categories": ["Words that become animals when you add a letter"],
+    "reasonings": ["Category description is wrong. HEAR -> HARE is a rearrangement (anagram), not adding a letter. LOIN -> LION is also a rearrangement, not adding a letter. OX + F = FOX is the only one where adding a letter genuinely works. CROW is already an animal with no modification needed."]
+  },
+  {
+    "puzzle": "45.json",
+    "incorrect_categories": ["Words containing a day of the week"],
+    "reasonings": ["SUNDAE contains SUN (evoking Sunday), FRIED contains FRI (Friday), SATURN contains SAT (Saturday) -- these work with 3-letter abbreviations. But WEATHERED (W-E-A-T-H-E-R-E-D) contains no day of the week as a contiguous substring, not even abbreviated (WED would need W-E-D adjacent, but the D is at position 9, far from W-E at positions 1-2)."]
+  },
+  {
+    "puzzle": "48.json",
+    "incorrect_categories": ["Words that sound like letters + numbers"],
+    "reasonings": ["CANINE = K-9 (letter + number) is perfect. TENNIS = 10-S (number + letter) is reasonable. But FORTUNE has no clean letter+number decomposition (4-10 is two numbers, not letters+numbers). SEASON has no discernible parsing into letters and numbers at all."]
+  }
+]

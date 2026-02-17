@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things measured in degrees", "words": ["ANGLE", "BURN", "FEVER", "TURN"], "difficulty": 0 },
+		{ "category": "Sea ___", "words": ["HORSE", "SHELL", "FOOD", "WEED"], "difficulty": 1 },
+		{ "category": "Words meaning 'copy'", "words": ["FORGE", "MIRROR", "PARROT", "APE"], "difficulty": 2 },
+		{ "category": "___ bar", "words": ["CROW", "HANDLE", "GOLD", "MONKEY"], "difficulty": 3 }
+	]
+}

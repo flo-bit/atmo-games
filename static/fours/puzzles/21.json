@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things that sting", "words": ["BEE", "JELLYFISH", "NETTLE", "COMMENT"], "difficulty": 0 },
+    { "category": "Second ___", "words": ["HAND", "NATURE", "THOUGHT", "WIND"], "difficulty": 1 },
+    { "category": "___ Ball", "words": ["BASE", "SNOW", "EYE", "CRYSTAL"], "difficulty": 2 },
+    { "category": "Greek letters", "words": ["ALPHA", "DELTA", "SIGMA", "OMEGA"], "difficulty": 3 }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Parts of a shoe", "words": ["SOLE", "TONGUE", "HEEL", "LACE"], "difficulty": 0 },
+    { "category": "Things that drip", "words": ["FAUCET", "CANDLE", "NOSE", "PAINT"], "difficulty": 1 },
+    { "category": "Golden ___", "words": ["GATE", "RULE", "AGE", "RETRIEVER"], "difficulty": 2 },
+    { "category": "Words meaning \"leave\"", "words": ["SPLIT", "BOUNCE", "JET", "BOLT"], "difficulty": 3 }
+  ]
+}

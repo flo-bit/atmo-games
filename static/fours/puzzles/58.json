@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that glow", "words": ["CANDLE", "STAR", "NEON", "EMBER"], "difficulty": 0 },
+		{ "category": "Lip ___", "words": ["STICK", "SYNC", "BALM", "SERVICE"], "difficulty": 1 },
+		{ "category": "Things you can 'plant'", "words": ["SEED", "TREE", "EVIDENCE", "KISS"], "difficulty": 2 },
+		{ "category": "Also a font", "words": ["IMPACT", "COURIER", "GEORGIA", "CENTURY"], "difficulty": 3 }
+	]
+}

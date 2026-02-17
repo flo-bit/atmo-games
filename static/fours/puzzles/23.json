@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things with blades", "words": ["FAN", "SKATE", "HELICOPTER", "GRASS"], "difficulty": 0 },
+    { "category": "Drop ___", "words": ["KICK", "SHOT", "DEAD", "OUT"], "difficulty": 1 },
+    { "category": "Bright synonyms", "words": ["VIVID", "SHARP", "KEEN", "BRILLIANT"], "difficulty": 2 },
+    { "category": "Musical terms used in everyday speech", "words": ["TEMPO", "FORTE", "PITCH", "NOTE"], "difficulty": 3 }
+  ]
+}

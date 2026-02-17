@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things in a wallet", "words": ["CASH", "CARD", "LICENSE", "RECEIPT"], "difficulty": 0 },
+    { "category": "Starts with a fruit", "words": ["APPLAUSE", "PEARLS", "PLUMBER", "MANGOLD"], "difficulty": 1 },
+    { "category": "Double ___", "words": ["DUTCH", "TAKE", "CHECK", "AGENT"], "difficulty": 2 },
+    { "category": "Sounds like a letter", "words": ["SEA", "ARE", "WHY", "TEE"], "difficulty": 3 }
+  ]
+}

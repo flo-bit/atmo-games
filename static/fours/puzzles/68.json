@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things in the ocean", "words": ["WHALE", "CORAL", "CURRENT", "WAVE"], "difficulty": 0 },
+		{ "category": "Loose ___", "words": ["CANNON", "END", "CHANGE", "LEAF"], "difficulty": 1 },
+		{ "category": "Words meaning 'eat quickly'", "words": ["SCARF", "WOLF", "INHALE", "DEVOUR"], "difficulty": 2 },
+		{ "category": "Goes after both 'sun' and 'moon'", "words": ["LIGHT", "BEAM", "RISE", "SHINE"], "difficulty": 3 }
+	]
+}

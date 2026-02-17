@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "___ roll", "words": ["DRUM", "EGG", "ROCK", "BARREL"], "difficulty": 0 },
+		{ "category": "___fly", "words": ["BAR", "BUTTER", "MAY", "FIRE"], "difficulty": 1 },
+		{ "category": "Things you can 'run'", "words": ["BATH", "ERRAND", "RISK", "BUSINESS"], "difficulty": 2 },
+		{ "category": "Add S to front = new word", "words": ["LAUGHTER", "CREAM", "TALK", "HARP"], "difficulty": 3 }
+	]
+}

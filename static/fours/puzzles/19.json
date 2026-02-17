@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things in a gym", "words": ["BENCH", "TREADMILL", "DUMBBELL", "MAT"], "difficulty": 0 },
+    { "category": "Wild ___", "words": ["CARD", "FIRE", "LIFE", "GOOSE"], "difficulty": 1 },
+    { "category": "Words before \"light\"", "words": ["FLASH", "MOON", "SPOT", "HIGH"], "difficulty": 2 },
+    { "category": "Countries hidden in the word", "words": ["MIRACLE", "THERAPIST", "GERMANY", "SPANISH"], "difficulty": 3 }
+  ]
+}

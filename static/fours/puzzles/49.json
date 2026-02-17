@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with caps", "words": ["BOTTLE", "MUSHROOM", "KNEE", "PEN"], "difficulty": 0 },
+		{ "category": "Stone ___", "words": ["COLD", "WALL", "MASON", "AGE"], "difficulty": 1 },
+		{ "category": "Words meaning 'to throw'", "words": ["HURL", "CHUCK", "LOB", "FLING"], "difficulty": 2 },
+		{ "category": "Famous pairs (one half)", "words": ["CLYDE", "HARDY", "GARFUNKEL", "COSTELLO"], "difficulty": 3 }
+	]
+}

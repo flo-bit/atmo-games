@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that spin", "words": ["TOP", "WHEEL", "RECORD", "DRYER"], "difficulty": 0 },
+		{ "category": "Single ___", "words": ["HANDED", "MINDED", "FILE", "MALT"], "difficulty": 1 },
+		{ "category": "Words meaning 'angry'", "words": ["CROSS", "SORE", "MAD", "HEATED"], "difficulty": 2 },
+		{ "category": "Repeated syllable words", "words": ["MURMUR", "BONBON", "TUTU", "CANCAN"], "difficulty": 3 }
+	]
+}

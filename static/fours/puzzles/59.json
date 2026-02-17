@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that float", "words": ["BOAT", "CLOUD", "BALLOON", "ICE"], "difficulty": 0 },
+		{ "category": "Match ___", "words": ["STICK", "BOX", "MAKER", "POINT"], "difficulty": 1 },
+		{ "category": "Things you can 'set'", "words": ["TABLE", "TRAP", "RECORD", "TONE"], "difficulty": 2 },
+		{ "category": "Ends in 'key'", "words": ["TURKEY", "DONKEY", "MONKEY", "HOCKEY"], "difficulty": 3 }
+	]
+}

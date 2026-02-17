@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with tails", "words": ["KITE", "COMET", "DOG", "COAT"], "difficulty": 0 },
+		{ "category": "Water ___", "words": ["FALL", "PROOF", "MARK", "SHED"], "difficulty": 1 },
+		{ "category": "Types of market", "words": ["FLEA", "STOCK", "BLACK", "SUPER"], "difficulty": 2 },
+		{ "category": "Silent letter at the start", "words": ["KNIGHT", "PSALM", "WRAP", "GNAW"], "difficulty": 3 }
+	]
+}

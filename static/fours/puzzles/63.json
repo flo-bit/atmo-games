@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things at a desk", "words": ["LAMP", "STAPLER", "PEN", "MOUSE"], "difficulty": 0 },
+		{ "category": "Rough ___", "words": ["CUT", "HOUSE", "NECK", "DIAMOND"], "difficulty": 1 },
+		{ "category": "___down", "words": ["LET", "LOCK", "BREAK", "SHOW"], "difficulty": 2 },
+		{ "category": "Contains 3 consecutive alphabet letters", "words": ["DEFINE", "LAUGHING", "CANOPY", "FIRST"], "difficulty": 3 }
+	]
+}

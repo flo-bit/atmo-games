@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with strings", "words": ["GUITAR", "PUPPET", "KITE", "HOODIE"], "difficulty": 0 },
+		{ "category": "Straight ___", "words": ["FLUSH", "EDGE", "FORWARD", "JACKET"], "difficulty": 1 },
+		{ "category": "Words meaning 'face'", "words": ["MUG", "DIAL", "KISSER", "PAN"], "difficulty": 2 },
+		{ "category": "Periodic table symbols that don't match", "words": ["GOLD", "SILVER", "IRON", "SODIUM"], "difficulty": 3 }
+	]
+}

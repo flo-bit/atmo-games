@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things with teeth", "words": ["COMB", "GEAR", "SHARK", "ZIPPER"], "difficulty": 0 },
+    { "category": "Full ___", "words": ["MOON", "HOUSE", "TIME", "CIRCLE"], "difficulty": 1 },
+    { "category": "Words before \"up\"", "words": ["COVER", "SHAKE", "ROUND", "MARK"], "difficulty": 2 },
+    { "category": "Palindromes", "words": ["KAYAK", "LEVEL", "CIVIC", "RADAR"], "difficulty": 3 }
+  ]
+}

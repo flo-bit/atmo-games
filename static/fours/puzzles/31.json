@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that bounce", "words": ["BALL", "CHECK", "IDEA", "BACK"], "difficulty": 0 },
+		{ "category": "Storm ___", "words": ["TROOPER", "CHASER", "DRAIN", "CLOUD"], "difficulty": 1 },
+		{ "category": "Shades of blue", "words": ["NAVY", "COBALT", "ROYAL", "STEEL"], "difficulty": 2 },
+		{ "category": "Words where removing last letter gives a planet", "words": ["MARSH", "SATURN", "VENUSE", "EARTHY"], "difficulty": 3 }
+	]
+}

@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things with stripes", "words": ["ZEBRA", "TIGER", "FLAG", "REFEREE"], "difficulty": 0 },
+    { "category": "Over ___", "words": ["BOARD", "DUE", "NIGHT", "COAT"], "difficulty": 1 },
+    { "category": "Words meaning \"zero\"", "words": ["ZILCH", "NADA", "NIL", "GOOSE"], "difficulty": 2 },
+    { "category": "Composer last names", "words": ["BACH", "HANDEL", "LISZT", "WOLF"], "difficulty": 3 }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Tools", "words": ["HAMMER", "DRILL", "WRENCH", "LEVEL"], "difficulty": 0 },
+    { "category": "Short ___", "words": ["CUT", "STOP", "HAND", "CAKE"], "difficulty": 1 },
+    { "category": "Things with layers", "words": ["ONION", "CAKE", "EARTH", "LASAGNA"], "difficulty": 2 },
+    { "category": "Words where removing first letter gives an animal", "words": ["BEAST", "TOWER", "GOAT", "CRAM"], "difficulty": 3 }
+  ]
+}

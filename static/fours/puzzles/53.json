@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things at a BBQ", "words": ["GRILL", "BURGER", "RIBS", "CORN"], "difficulty": 0 },
+		{ "category": "Grand ___", "words": ["PIANO", "JURY", "SLAM", "CANYON"], "difficulty": 1 },
+		{ "category": "Things that have a head", "words": ["NAIL", "BEER", "LETTUCE", "RIVER"], "difficulty": 2 },
+		{ "category": "Famous ___'s ___ (eponyms)", "words": ["MURPHY", "ADAM", "ACHILLES", "PANDORA"], "difficulty": 3 }
+	]
+}

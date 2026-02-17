@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you can press", "words": ["BUTTON", "IRON", "FLOWER", "JUICE"], "difficulty": 0 },
+		{ "category": "___ bell", "words": ["DOOR", "COW", "DUMB", "BLUE"], "difficulty": 1 },
+		{ "category": "Collective nouns for animals", "words": ["PACK", "FLOCK", "MURDER", "SCHOOL"], "difficulty": 2 },
+		{ "category": "___ code", "words": ["AREA", "ZIP", "DRESS", "CHEAT"], "difficulty": 3 }
+	]
+}

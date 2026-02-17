@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with scales", "words": ["FISH", "DRAGON", "MAP", "JUSTICE"], "difficulty": 0 },
+		{ "category": "Double ___", "words": ["CROSS", "DOWN", "DUTCH", "DECKER"], "difficulty": 1 },
+		{ "category": "Words before 'line'", "words": ["PUNCH", "DEAD", "GUIDE", "TAG"], "difficulty": 2 },
+		{ "category": "Anagrams of US states", "words": ["HAUT", "HOWL", "AIMED", "TAXES"], "difficulty": 3 }
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a dial", "words": ["PHONE", "WATCH", "RADIO", "SUN"], "difficulty": 0 },
+		{ "category": "Fair ___", "words": ["GROUND", "PLAY", "WAY", "WEATHER"], "difficulty": 1 },
+		{ "category": "Things you 'throw'", "words": ["PARTY", "SHADE", "TOWEL", "PUNCH"], "difficulty": 2 },
+		{ "category": "Seven ___", "words": ["DEADLY", "DWARFS", "WONDERS", "SEAS"], "difficulty": 3 }
+	]
+}

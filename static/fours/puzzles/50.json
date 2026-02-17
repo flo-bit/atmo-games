@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that tick", "words": ["CLOCK", "BOMB", "HEART", "INSECT"], "difficulty": 0 },
+		{ "category": "Catch ___", "words": ["PHRASE", "FIRE", "UP", "WORD"], "difficulty": 1 },
+		{ "category": "Words before 'board'", "words": ["DASH", "CUP", "SCORE", "SURF"], "difficulty": 2 },
+		{ "category": "Movies that are just one name", "words": ["ROCKY", "JAWS", "BAMBI", "NOPE"], "difficulty": 3 }
+	]
+}

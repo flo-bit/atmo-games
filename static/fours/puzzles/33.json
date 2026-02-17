@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with buttons", "words": ["SHIRT", "REMOTE", "ELEVATOR", "CONTROLLER"], "difficulty": 0 },
+		{ "category": "Sweet ___", "words": ["HEART", "TOOTH", "SPOT", "TALK"], "difficulty": 1 },
+		{ "category": "Words before 'house'", "words": ["WARE", "GREEN", "FIRE", "POWER"], "difficulty": 2 },
+		{ "category": "NATO alphabet letters", "words": ["FOXTROT", "TANGO", "WHISKEY", "LIMA"], "difficulty": 3 }
+	]
+}

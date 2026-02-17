@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Baby animals", "words": ["KIT", "CUB", "FOAL", "LAMB"], "difficulty": 0 },
+    { "category": "Studio ___", "words": ["APARTMENT", "ALBUM", "AUDIENCE", "PORTRAIT"], "difficulty": 1 },
+    { "category": "Things that are stacked", "words": ["DECK", "ODDS", "PANCAKES", "SHELVES"], "difficulty": 2 },
+    { "category": "Contains a number", "words": ["OFTEN", "FREIGHT", "WONDERFUL", "TENSE"], "difficulty": 3 }
+  ]
+}

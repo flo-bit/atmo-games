@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Fire ___", "words": ["TRUCK", "PLACE", "WORK", "FLY"], "difficulty": 0 },
+    { "category": "Slang for money", "words": ["BREAD", "DOUGH", "CHEDDAR", "CLAMS"], "difficulty": 1 },
+    { "category": "___ Board", "words": ["CARD", "SKATE", "CHALK", "DART"], "difficulty": 2 },
+    { "category": "Contains a body part", "words": ["ELBOW", "KNUCKLE", "TEMPLE", "SHOULDER"], "difficulty": 3 }
+  ]
+}

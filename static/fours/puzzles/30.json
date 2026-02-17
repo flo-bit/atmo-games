@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Types of shot", "words": ["FREE", "LONG", "CHEAP", "MUG"], "difficulty": 0 },
+    { "category": "Master ___", "words": ["MIND", "CLASS", "PIECE", "PLAN"], "difficulty": 1 },
+    { "category": "Things that can be bruised", "words": ["EGO", "FRUIT", "KNEE", "FEELINGS"], "difficulty": 2 },
+    { "category": "Chemical element symbols", "words": ["IRON", "TIN", "LEAD", "GOLD"], "difficulty": 3 }
+  ]
+}

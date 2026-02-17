@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Types of chart", "words": ["BAR", "PIE", "LINE", "FLOW"], "difficulty": 0 },
+    { "category": "Things with rings", "words": ["SATURN", "CIRCUS", "PHONE", "TREE"], "difficulty": 1 },
+    { "category": "Cold ___", "words": ["CASE", "SHOULDER", "FRONT", "TURKEY"], "difficulty": 2 },
+    { "category": "___ + animal = word", "words": ["CARPET", "CATALOG", "FOXGLOVE", "CROWBAR"], "difficulty": 3 }
+  ]
+}

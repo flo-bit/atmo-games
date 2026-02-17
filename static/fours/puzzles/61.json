@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that are sticky", "words": ["TAPE", "HONEY", "GLUE", "LABEL"], "difficulty": 0 },
+		{ "category": "Open ___", "words": ["BOOK", "HEART", "HOUSE", "MIND"], "difficulty": 1 },
+		{ "category": "Kinds of plate", "words": ["HOME", "LICENSE", "DINNER", "TECTONIC"], "difficulty": 2 },
+		{ "category": "Contains an item of clothing", "words": ["CAPSIZE", "VESTED", "SCARFED", "SKIRTING"], "difficulty": 3 }
+	]
+}

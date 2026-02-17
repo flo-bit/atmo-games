@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a core", "words": ["APPLE", "EARTH", "ABS", "REACTOR"], "difficulty": 0 },
+		{ "category": "Out ___", "words": ["BREAK", "CAST", "COME", "DOORS"], "difficulty": 1 },
+		{ "category": "Words meaning 'excellent'", "words": ["STELLAR", "PRIME", "CRACK", "TOPS"], "difficulty": 2 },
+		{ "category": "Move first letter to end = new word", "words": ["SNAP", "EVIL", "EMIT", "TEAS"], "difficulty": 3 }
+	]
+}

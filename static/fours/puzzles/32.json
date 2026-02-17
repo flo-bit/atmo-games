@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things in a park", "words": ["BENCH", "FOUNTAIN", "TRAIL", "SWING"], "difficulty": 0 },
+		{ "category": "Blind ___", "words": ["SPOT", "FOLD", "SIDE", "DATE"], "difficulty": 1 },
+		{ "category": "Words meaning 'steal'", "words": ["SWIPE", "LIFT", "PINCH", "NICK"], "difficulty": 2 },
+		{ "category": "___tion minus the 'tion'", "words": ["OPERA", "NA", "MO", "STA"], "difficulty": 3 }
+	]
+}

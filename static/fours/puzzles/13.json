@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things that buzz", "words": ["BEE", "PHONE", "SAW", "CROWD"], "difficulty": 0 },
+    { "category": "Kinds of pass", "words": ["BOARDING", "MOUNTAIN", "HALL", "FORWARD"], "difficulty": 1 },
+    { "category": "Pocket ___", "words": ["KNIFE", "WATCH", "SQUARE", "CHANGE"], "difficulty": 2 },
+    { "category": "Last names of Toms", "words": ["CRUISE", "HARDY", "JONES", "HANKS"], "difficulty": 3 }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Red things", "words": ["CARDINAL", "CHERRY", "MARS", "LOBSTER"], "difficulty": 0 },
+    { "category": "Flat ___", "words": ["IRON", "BREAD", "TIRE", "RATE"], "difficulty": 1 },
+    { "category": "Things you can crack", "words": ["CODE", "JOKE", "WHIP", "DAWN"], "difficulty": 2 },
+    { "category": "Words spelled with Roman numerals only", "words": ["CIVIL", "MILD", "LIVID", "MIMIC"], "difficulty": 3 }
+  ]
+}

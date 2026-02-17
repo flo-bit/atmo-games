@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Citrus fruits", "words": ["LEMON", "LIME", "ORANGE", "GRAPEFRUIT"], "difficulty": 0 },
+    { "category": "Head ___", "words": ["BAND", "LINE", "QUARTERS", "COUNT"], "difficulty": 1 },
+    { "category": "Things that tick", "words": ["CLOCK", "BOMB", "BOX", "METER"], "difficulty": 2 },
+    { "category": "Words that become new words when read backwards", "words": ["STAR", "POOL", "SNAP", "DEVIL"], "difficulty": 3 }
+  ]
+}

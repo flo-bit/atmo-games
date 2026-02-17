@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Types of jacket", "words": ["LIFE", "STRAIGHT", "DUST", "YELLOW"], "difficulty": 0 },
+    { "category": "Things that are pitched", "words": ["TENT", "IDEA", "BALL", "FIT"], "difficulty": 1 },
+    { "category": "___ Stone", "words": ["KEY", "LIME", "MILE", "CORNER"], "difficulty": 2 },
+    { "category": "Words before \"run\"", "words": ["HOME", "DRY", "BULL", "LONG"], "difficulty": 3 }
+  ]
+}

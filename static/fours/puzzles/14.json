@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Things with hands", "words": ["CLOCK", "POKER", "PUPPET", "PIANO"], "difficulty": 0 },
+    { "category": "Sharp ___", "words": ["TONGUE", "SHOOTER", "TURN", "DRESSED"], "difficulty": 1 },
+    { "category": "___ Side", "words": ["BED", "BLIND", "HILL", "RING"], "difficulty": 2 },
+    { "category": "Rhymes with a day of the week", "words": ["BUNDAY", "FRIED", "LURCH", "DUES"], "difficulty": 3 }
+  ]
+}

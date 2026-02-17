@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "___ pool", "words": ["CAR", "GENE", "DEAD", "WHIRL"], "difficulty": 0 },
+		{ "category": "Turn ___", "words": ["AROUND", "OVER", "PIKE", "TABLE"], "difficulty": 1 },
+		{ "category": "Things associated with luck", "words": ["CLOVER", "HORSESHOE", "PENNY", "RABBIT"], "difficulty": 2 },
+		{ "category": "Types of haircut", "words": ["CREW", "BOB", "BUZZ", "PIXIE"], "difficulty": 3 }
+	]
+}

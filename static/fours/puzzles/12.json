@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Kinds of bean", "words": ["KIDNEY", "LIMA", "STRING", "JELLY"], "difficulty": 0 },
+    { "category": "Ways to move fast", "words": ["DASH", "BOLT", "SPRINT", "TEAR"], "difficulty": 1 },
+    { "category": "Paper ___", "words": ["CLIP", "BACK", "WEIGHT", "TRAIL"], "difficulty": 2 },
+    { "category": "Famous ___ Johns", "words": ["ELTON", "DEAR", "LONG", "LITTLE"], "difficulty": 3 }
+  ]
+}

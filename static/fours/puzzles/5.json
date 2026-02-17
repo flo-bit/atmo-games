@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Musical instruments", "words": ["DRUM", "BASS", "HORN", "ORGAN"], "difficulty": 0 },
+    { "category": "___ Fish", "words": ["SWORD", "ANGEL", "BLOW", "CAT"], "difficulty": 1 },
+    { "category": "Things you can break", "words": ["RECORD", "NEWS", "GROUND", "SILENCE"], "difficulty": 2 },
+    { "category": "Hidden tree", "words": ["ASHAMED", "BELIEVE", "DISPLAY", "HEMLOCK"], "difficulty": 3 }
+  ]
+}

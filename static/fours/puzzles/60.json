@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a pit", "words": ["CHERRY", "PEACH", "MINE", "ARM"], "difficulty": 0 },
+		{ "category": "Silver ___", "words": ["SCREEN", "LINING", "BULLET", "TONGUE"], "difficulty": 1 },
+		{ "category": "Clean ___", "words": ["RECORD", "SLATE", "BREAK", "SWEEP"], "difficulty": 2 },
+		{ "category": "Also a part of a ship", "words": ["BOW", "STERN", "PORT", "DECK"], "difficulty": 3 }
+	]
+}
