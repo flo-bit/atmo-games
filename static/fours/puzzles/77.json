@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a horn", "words": ["RHINO", "CAR", "BULL", "UNICORN"], "difficulty": 0 },
+		{ "category": "Home ___", "words": ["SICK", "LAND", "TOWN", "COMING"], "difficulty": 1 },
+		{ "category": "Running ___", "words": ["TAP", "NOSE", "JOKE", "TOTAL"], "difficulty": 2 },
+		{ "category": "Goes after both 'fire' and 'water'", "words": ["PROOF", "WORKS", "SIDE", "LINE"], "difficulty": 3 }
+	]
+}

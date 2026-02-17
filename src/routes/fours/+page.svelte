@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import ConnectionsGame from '$lib/connections/ConnectionsGame.svelte';
-	import { getTodayPuzzleIndex, fetchPuzzle } from '$lib/connections/daily';
+	import { getTodayPuzzleNumber, fetchPuzzle } from '$lib/connections/daily';
 	import type { ConnectionsPuzzle } from '$lib/connections/types';
 
 	let puzzle: ConnectionsPuzzle | null = $state(null);
+	let puzzleNumber = getTodayPuzzleNumber();
 
 	onMount(async () => {
-		const index = getTodayPuzzleIndex();
-		puzzle = await fetchPuzzle(index);
+		puzzle = await fetchPuzzle(puzzleNumber);
 	});
 </script>
 
@@ -17,7 +17,7 @@
 
 	{#if puzzle}
 		<div class="w-full max-w-lg">
-			<ConnectionsGame {puzzle} />
+			<ConnectionsGame {puzzle} puzzleId={puzzleNumber} />
 		</div>
 	{:else}
 		<p class="text-sm text-stone-500">Loading...</p>

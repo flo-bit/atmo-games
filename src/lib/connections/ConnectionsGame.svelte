@@ -2,10 +2,10 @@
 	import { dev } from '$app/environment';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
-	import { getTodayDateString, getMillisUntilMidnight } from './daily';
+	import { getMillisUntilMidnight } from './daily';
 	import type { ConnectionsGroup, ConnectionsPuzzle } from './types';
 
-	let { puzzle }: { puzzle: ConnectionsPuzzle } = $props();
+	let { puzzle, puzzleId }: { puzzle: ConnectionsPuzzle; puzzleId: number } = $props();
 
 	let shuffledWords: string[] = $state([]);
 	let selectedWords: string[] = $state([]);
@@ -19,6 +19,28 @@
 	let coloringGroup: ConnectionsGroup | null = $state(null);
 	let isSubmitting: boolean = $state(false);
 	let countdown: string = $state('');
+	let hintWords: Map<string, number> = $state(new Map());
+	let boardEl: HTMLDivElement | undefined = $state();
+	let boardWidth: number = $state(0);
+	let isDark = $state(false);
+
+	$effect(() => {
+		const mq = window.matchMedia('(prefers-color-scheme: dark)');
+		// Also check for .dark class on document
+		const check = () => {
+			isDark = document.documentElement.classList.contains('dark') || mq.matches;
+		};
+		check();
+		const observer = new MutationObserver(check);
+		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+		mq.addEventListener('change', check);
+		return () => {
+			observer.disconnect();
+			mq.removeEventListener('change', check);
+		};
+	});
+
+	const GAP = 8;
 
 	let remainingWords = $derived(
 		shuffledWords.filter(
@@ -53,6 +75,8 @@
 	function toggleWord(word: string) {
 		if (gameState !== 'playing' || isSubmitting) return;
 		if (solvedGroups.some((g) => g.words.includes(word as never))) return;
+
+		hintWords = new Map();
 
 		if (selectedWords.includes(word)) {
 			selectedWords = selectedWords.filter((w) => w !== word);
@@ -98,7 +122,9 @@
 						coloringWords = [];
 						coloringGroup = null;
 						selectedWords = [];
-						solvedGroups = [...solvedGroups, matchedGroup].sort((a, b) => a.difficulty - b.difficulty);
+						solvedGroups = [...solvedGroups, matchedGroup].sort(
+							(a, b) => a.difficulty - b.difficulty
+						);
 						isSubmitting = false;
 
 						if (solvedGroups.length === 4) {
@@ -166,14 +192,25 @@
 		feedback = null;
 	}
 
+	function showHint() {
+		if (gameState !== 'playing' || isSubmitting) return;
+		selectedWords = [];
+		const unsolved = puzzle.groups.filter((g) => !solvedGroups.includes(g));
+		const map = new Map<string, number>();
+		for (const group of unsolved) {
+			map.set(group.words[0], group.difficulty);
+		}
+		hintWords = map;
+	}
+
 	function saveCompletion() {
-		const key = `connections-${getTodayDateString()}`;
+		const key = `connections-${puzzleId}`;
 		localStorage.setItem(key, JSON.stringify({ state: gameState, mistakes }));
 	}
 
 	function loadSavedGame(): boolean {
 		try {
-			const key = `connections-${getTodayDateString()}`;
+			const key = `connections-${puzzleId}`;
 			const saved = localStorage.getItem(key);
 			if (!saved) return false;
 			const data = JSON.parse(saved);
@@ -200,6 +237,20 @@
 		}
 	});
 
+	let tileSize = $derived(boardWidth > 0 ? (boardWidth - 3 * GAP) / 4 : 0);
+
+	$effect(() => {
+		if (boardEl) {
+			const measure = () => {
+				boardWidth = boardEl!.offsetWidth;
+			};
+			measure();
+			const ro = new ResizeObserver(measure);
+			ro.observe(boardEl);
+			return () => ro.disconnect();
+		}
+	});
+
 	$effect(() => {
 		if (gameState !== 'playing') {
 			const update = () => {
@@ -222,56 +273,85 @@
 	});
 
 	const difficultyColors = [
-		'bg-yellow-400 text-yellow-950',
-		'bg-green-500 text-green-950',
-		'bg-blue-500 text-blue-950',
-		'bg-purple-500 text-purple-950'
+		'bg-yellow-400 dark:bg-yellow-600 text-stone-900 dark:text-stone-100',
+		'bg-green-400 dark:bg-green-600 text-stone-900 dark:text-stone-100',
+		'bg-blue-400 dark:bg-blue-600 text-stone-900 dark:text-stone-100',
+		'bg-purple-400 dark:bg-purple-600 text-stone-900 dark:text-stone-100'
 	];
 
-	const difficultyInlineColors = ['#facc15', '#22c55e', '#3b82f6', '#a855f7'];
+	const difficultyInlineColors: [string, string][] = [
+		['#facc15', '#ca8a04'],
+		['#4ade80', '#16a34a'],
+		['#60a5fa', '#2563eb'],
+		['#c084fc', '#9333ea']
+	];
+
+	function inlineColor(difficulty: number): string {
+		return difficultyInlineColors[difficulty][isDark ? 1 : 0];
+	}
 
 	function tileStyle(word: string): string {
 		const bounceIdx = bouncingWords.indexOf(word);
 		const bounceStyle = bounceIdx >= 0 ? `animation-delay: ${bounceIdx * 100}ms;` : '';
+		const textColor = isDark ? '#fafaf9' : '#1c1917';
 
 		if (coloringWords.includes(word) && coloringGroup) {
-			return `${bounceStyle} background-color: ${difficultyInlineColors[coloringGroup.difficulty]}; color: #1c1917; transition: background-color 0.2s, color 0.2s;`;
+			return `${bounceStyle} background-color: ${inlineColor(coloringGroup.difficulty)}; color: ${textColor}; transition: background-color 0.2s, color 0.2s;`;
+		}
+
+		if (hintWords.has(word)) {
+			return `${bounceStyle} background-color: ${inlineColor(hintWords.get(word)!)}; color: ${textColor}; transition: background-color 0.3s, color 0.3s;`;
 		}
 
 		return bounceStyle;
 	}
 </script>
 
-<div class="relative flex w-full flex-col gap-4 p-4">
+<div class="relative flex w-full flex-col gap-4 px-2 py-4 sm:px-4">
 	<p class="text-center text-sm font-semibold text-stone-700 dark:text-stone-300">
 		Create four groups of four!
 	</p>
 
-	<div class="game-grid grid grid-cols-4 grid-rows-4 gap-2">
-		{#each solvedGroups as group (group.category)}
+	<div
+		bind:this={boardEl}
+		class="relative w-full"
+		style:height="{tileSize * 4 + GAP * 3}px"
+	>
+		{#each solvedGroups as group, i (group.category)}
 			<div
-				class="row-pop {difficultyColors[group.difficulty]} col-span-4 flex flex-col items-center justify-center rounded-lg text-center"
+				class="row-pop {difficultyColors[group.difficulty]} absolute flex flex-col items-center justify-center overflow-hidden rounded-lg text-center"
+				style:top="{i * (tileSize + GAP)}px"
+				style:left="0"
+				style:width="{boardWidth}px"
+				style:height="{tileSize}px"
 			>
-				<span class="text-lg font-bold uppercase">{group.category}</span>
-				<span class="text-base">{group.words.join(', ')}</span>
+				<span class="text-base font-extrabold sm:text-2xl">{group.category}</span>
+				<span class="text-sm font-semibold leading-tight sm:text-lg">{group.words.join(', ')}</span>
 			</div>
 		{/each}
 
-		{#each remainingWords as word (word)}
+		{#each remainingWords as word, idx (word)}
+			{@const row = solvedGroups.length + Math.floor(idx / 4)}
+			{@const col = idx % 4}
 			<button
 				animate:flip={{ duration: 400 }}
-				class="flex cursor-pointer items-center justify-center rounded-lg text-sm font-bold uppercase {coloringWords.includes(word)
+				class="absolute flex cursor-pointer items-center justify-center overflow-hidden break-all rounded-lg px-1 text-center text-sm leading-tight font-extrabold uppercase hyphens-auto sm:text-lg {coloringWords.includes(
+					word
+				)
 					? ''
 					: selectedWords.includes(word)
 						? 'bg-stone-600 text-white dark:bg-stone-300 dark:text-stone-900'
-						: 'bg-stone-200 text-stone-900 dark:bg-stone-700 dark:text-stone-100'} {shakingWords.includes(word)
+						: 'bg-stone-200 text-stone-900 dark:bg-stone-700 dark:text-stone-100'} {shakingWords.includes(
+					word
+				)
 					? 'shake'
 					: ''} {bouncingWords.includes(word) ? 'bounce' : ''}"
-				style={tileStyle(word)}
+				style="{tileStyle(word)} top: {row * (tileSize + GAP)}px; left: {col * (tileSize + GAP)}px; width: {tileSize}px; height: {tileSize}px;"
 				onclick={() => toggleWord(word)}
 				disabled={gameState !== 'playing' || isSubmitting}
+			lang="en"
 			>
-				{word}
+				<span class="max-w-full">{word.toLowerCase()}</span>
 			</button>
 		{/each}
 	</div>
@@ -325,6 +405,13 @@
 			>
 				Submit
 			</button>
+			<button
+				class="cursor-pointer rounded-full border border-stone-400 px-3 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-500 dark:text-stone-300 dark:hover:bg-stone-700"
+				onclick={showHint}
+				disabled={isSubmitting}
+			>
+				Hint
+			</button>
 		{:else}
 			<span class="text-xs text-stone-500 dark:text-stone-400">
 				Next puzzle in {countdown}
@@ -333,7 +420,10 @@
 		{#if dev}
 			<button
 				class="cursor-pointer rounded-full border border-red-400 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 dark:border-red-500 dark:text-red-400 dark:hover:bg-red-900/30"
-				onclick={() => { localStorage.removeItem(`connections-${getTodayDateString()}`); initGame(); }}
+				onclick={() => {
+					localStorage.removeItem(`connections-${puzzleId}`);
+					initGame();
+				}}
 			>
 				Reset
 			</button>
@@ -343,29 +433,57 @@
 
 <style>
 	@keyframes shake {
-		0%, 100% { transform: translateX(0); }
-		20% { transform: translateX(-4px); }
-		40% { transform: translateX(4px); }
-		60% { transform: translateX(-4px); }
-		80% { transform: translateX(2px); }
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		20% {
+			transform: translateX(-4px);
+		}
+		40% {
+			transform: translateX(4px);
+		}
+		60% {
+			transform: translateX(-4px);
+		}
+		80% {
+			transform: translateX(2px);
+		}
 	}
-	.shake { animation: shake 0.5s ease-in-out; }
+	.shake {
+		animation: shake 0.5s ease-in-out;
+	}
 
 	@keyframes bounce {
-		0%, 100% { transform: translateY(0); }
-		40% { transform: translateY(-12px); }
-		60% { transform: translateY(-4px); }
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		40% {
+			transform: translateY(-12px);
+		}
+		60% {
+			transform: translateY(-4px);
+		}
 	}
-	.bounce { animation: bounce 0.4s ease-in-out both; }
+	.bounce {
+		animation: bounce 0.4s ease-in-out both;
+	}
 
 	@keyframes row-pop {
-		0% { opacity: 0; transform: scaleY(0.7); }
-		50% { opacity: 1; transform: scaleY(1.06); }
-		75% { transform: scaleY(0.97); }
-		100% { transform: scaleY(1); }
+		0% {
+			opacity: 0;
+			transform: scale(0.95);
+		}
+		60% {
+			opacity: 1;
+			transform: scale(1.02);
+		}
+		100% {
+			transform: scale(1);
+		}
 	}
-	.row-pop { animation: row-pop 0.5s ease-out both; }
-
-	/* Lock the grid to a square so rows never shift during animations */
-	.game-grid { aspect-ratio: 1 / 1; }
+	.row-pop {
+		animation: row-pop 0.4s ease-out both;
+	}
 </style>

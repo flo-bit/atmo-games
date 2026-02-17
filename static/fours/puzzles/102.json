@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'lend'", "words": ["EAR", "HAND", "MONEY", "SUPPORT"], "difficulty": 0 },
+		{ "category": "___less", "words": ["CARE", "HOME", "REST", "RUTH"], "difficulty": 1 },
+		{ "category": "Things you 'carry'", "words": ["TUNE", "WEIGHT", "TORCH", "GRUDGE"], "difficulty": 2 },
+		{ "category": "All anagrams of each other", "words": ["LISTEN", "SILENT", "ENLIST", "INLETS"], "difficulty": 3 }
+	]
+}

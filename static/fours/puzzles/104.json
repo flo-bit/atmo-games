@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that crumble", "words": ["COOKIE", "WALL", "FETA", "EMPIRE"], "difficulty": 0 },
+		{ "category": "Tail ___", "words": ["GATE", "SPIN", "COAT", "WIND"], "difficulty": 1 },
+		{ "category": "Things you 'call'", "words": ["BLUFF", "SHOTS", "QUITS", "NAMES"], "difficulty": 2 },
+		{ "category": "Swap first and last letter = new word", "words": ["PAN", "TEN", "RAT", "POT"], "difficulty": 3 }
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a bed", "words": ["RIVER", "FLOWER", "NAIL", "TRUCK"], "difficulty": 0 },
+		{ "category": "Wall ___", "words": ["PAPER", "STREET", "PLUG", "NUT"], "difficulty": 1 },
+		{ "category": "Words meaning 'quiet'", "words": ["HUSH", "MUTE", "STILL", "SOFT"], "difficulty": 2 },
+		{ "category": "___cake", "words": ["CUP", "PAN", "CHEESE", "FRUIT"], "difficulty": 3 }
+	]
+}

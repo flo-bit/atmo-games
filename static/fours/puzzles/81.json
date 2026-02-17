@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you flip", "words": ["PANCAKE", "COIN", "SWITCH", "BURGER"], "difficulty": 0 },
+		{ "category": "Land ___", "words": ["MARK", "LORD", "SLIDE", "SCAPE"], "difficulty": 1 },
+		{ "category": "Also a unit of currency", "words": ["POUND", "BUCK", "CROWN", "GUINEA"], "difficulty": 2 },
+		{ "category": "Letters are in alphabetical order", "words": ["ALMOST", "BEGINS", "CHIMPS", "ADOPT"], "difficulty": 3 }
+	]
+}

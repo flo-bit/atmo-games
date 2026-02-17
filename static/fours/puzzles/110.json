@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that fade", "words": ["COLOR", "MEMORY", "BRUISE", "HOPE"], "difficulty": 0 },
+		{ "category": "___board", "words": ["HEAD", "SNOW", "FLOOR", "BILL"], "difficulty": 1 },
+		{ "category": "Words meaning 'to fix'", "words": ["MEND", "PATCH", "CURE", "RIGHT"], "difficulty": 2 },
+		{ "category": "Ends in double O", "words": ["VOODOO", "IGLOO", "BAMBOO", "TATTOO"], "difficulty": 3 }
+	]
+}

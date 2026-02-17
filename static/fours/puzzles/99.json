@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'crack'", "words": ["EGG", "KNUCKLE", "ICE", "CASE"], "difficulty": 0 },
+		{ "category": "Counter ___", "words": ["PART", "POINT", "ATTACK", "CLAIM"], "difficulty": 1 },
+		{ "category": "Words meaning 'fake'", "words": ["SHAM", "PHONY", "BOGUS", "MOCK"], "difficulty": 2 },
+		{ "category": "Ends in a musical note (do re mi fa so la ti)", "words": ["SOFA", "ALSO", "JUDO", "SALAMI"], "difficulty": 3 }
+	]
+}

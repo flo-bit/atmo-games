@@ -3,6 +3,6 @@
 		{ "category": "Things with spots", "words": ["LEOPARD", "DICE", "DALMATIAN", "LADYBUG"], "difficulty": 0 },
 		{ "category": "Time ___", "words": ["ZONE", "STAMP", "TABLE", "LAPSE"], "difficulty": 1 },
 		{ "category": "Slang for 'phone'", "words": ["CELL", "RING", "BUZZ", "LINE"], "difficulty": 2 },
-		{ "category": "Words that become animals when you add a letter", "words": ["HEAR", "LOIN", "OX", "CROW"], "difficulty": 3 }
+		{ "category": "Anagrams of animals", "words": ["HEAR", "LOIN", "FLOW", "SHORE"], "difficulty": 3 }
 	]
 }

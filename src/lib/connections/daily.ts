@@ -1,24 +1,19 @@
 import { base } from '$app/paths';
 import type { ConnectionsPuzzle } from './types';
 
-export const START_DATE = '2026-02-10';
-export const TOTAL_PUZZLES = 30;
+export const START_DATE = '2026-01-01';
+export const TOTAL_PUZZLES = 110;
 
-export function getTodayDateString(): string {
-	const d = new Date();
-	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
-export function getTodayPuzzleIndex(): number {
+export function getTodayPuzzleNumber(): number {
 	const now = new Date();
 	now.setHours(0, 0, 0, 0);
 	const start = new Date(START_DATE + 'T00:00:00');
 	const diffDays = Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-	return Math.max(0, Math.min(diffDays, TOTAL_PUZZLES - 1));
+	return Math.max(1, Math.min(diffDays + 1, TOTAL_PUZZLES));
 }
 
-export async function fetchPuzzle(index: number): Promise<ConnectionsPuzzle> {
-	const res = await fetch(`${base}/fours/puzzles/${index + 1}.json`);
+export async function fetchPuzzle(puzzleNumber: number): Promise<ConnectionsPuzzle> {
+	const res = await fetch(`${base}/fours/puzzles/${puzzleNumber}.json`);
 	return res.json();
 }
 

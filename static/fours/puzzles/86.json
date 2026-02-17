@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "___post", "words": ["GOAL", "DOOR", "SIGN", "BED"], "difficulty": 0 },
+		{ "category": "___track", "words": ["RACE", "SOUND", "FAST", "SIDE"], "difficulty": 1 },
+		{ "category": "Bitter ___", "words": ["COLD", "TASTE", "END", "RIVAL"], "difficulty": 2 },
+		{ "category": "Card suits", "words": ["DIAMOND", "HEART", "CLUB", "SPADE"], "difficulty": 3 }
+	]
+}

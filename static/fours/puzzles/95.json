@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "___ patch", "words": ["EYE", "PUMPKIN", "CABBAGE", "SOUR"], "difficulty": 0 },
+		{ "category": "___bound", "words": ["HOME", "SNOW", "SPELL", "EARTH"], "difficulty": 1 },
+		{ "category": "Things you 'break'", "words": ["ICE", "SWEAT", "BREAD", "MOLD"], "difficulty": 2 },
+		{ "category": "End in -OUGH (all different sounds)", "words": ["COUGH", "THOUGH", "THROUGH", "BOUGH"], "difficulty": 3 }
+	]
+}

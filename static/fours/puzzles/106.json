@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'raise'", "words": ["FLAG", "HAND", "ALARM", "CHILD"], "difficulty": 0 },
+		{ "category": "___step", "words": ["DOOR", "FOOT", "QUICK", "TWO"], "difficulty": 1 },
+		{ "category": "Words meaning 'to quit'", "words": ["RESIGN", "BAIL", "CHUCK", "DITCH"], "difficulty": 2 },
+		{ "category": "Remove one letter = a color", "words": ["BRED", "PLUMB", "TANK", "STEAL"], "difficulty": 3 }
+	]
+}

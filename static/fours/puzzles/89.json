@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that click", "words": ["MOUSE", "PEN", "CAMERA", "TONGUE"], "difficulty": 0 },
+		{ "category": "Third ___", "words": ["PARTY", "WHEEL", "DEGREE", "WORLD"], "difficulty": 1 },
+		{ "category": "Words meaning 'to trick'", "words": ["DUPE", "CON", "FOOL", "SCAM"], "difficulty": 2 },
+		{ "category": "Add '-tion' to get a longer word", "words": ["OPERA", "QUOTA", "DICTA", "ROTA"], "difficulty": 3 }
+	]
+}

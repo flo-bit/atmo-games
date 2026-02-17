@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a crust", "words": ["BREAD", "PIZZA", "PIE", "EARTH"], "difficulty": 0 },
+		{ "category": "Play ___", "words": ["GROUND", "WRIGHT", "BOOK", "OFF"], "difficulty": 1 },
+		{ "category": "Things you 'draw'", "words": ["BATH", "SWORD", "CROWD", "CONCLUSION"], "difficulty": 2 },
+		{ "category": "___mate", "words": ["CHECK", "ROOM", "SOUL", "STALE"], "difficulty": 3 }
+	]
+}

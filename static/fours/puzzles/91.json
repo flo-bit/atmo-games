@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that are contagious", "words": ["LAUGHTER", "YAWN", "COLD", "SMILE"], "difficulty": 0 },
+		{ "category": "___way", "words": ["HALL", "DOOR", "STAIR", "HIGH"], "difficulty": 1 },
+		{ "category": "Things you 'make'", "words": ["BED", "POINT", "PEACE", "SCENE"], "difficulty": 2 },
+		{ "category": "Contains a musical instrument", "words": ["SHARP", "SALUTE", "VIOLATE", "HUMDRUM"], "difficulty": 3 }
+	]
+}

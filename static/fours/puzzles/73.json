@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'catch'", "words": ["FISH", "COLD", "BUS", "DRIFT"], "difficulty": 0 },
+		{ "category": "Quick ___", "words": ["SAND", "SILVER", "FIRE", "DRAW"], "difficulty": 1 },
+		{ "category": "Also sports equipment", "words": ["CLUB", "BAT", "NET", "IRON"], "difficulty": 2 },
+		{ "category": "Only vowel is the letter A", "words": ["SALAD", "DRAMA", "LLAMA", "ALPHA"], "difficulty": 3 }
+	]
+}

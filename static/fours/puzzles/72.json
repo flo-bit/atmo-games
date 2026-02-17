@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Goes with 'root'", "words": ["TREE", "TOOTH", "BEER", "SQUARE"], "difficulty": 0 },
+		{ "category": "___fire", "words": ["CAMP", "CROSS", "HELL", "WILD"], "difficulty": 1 },
+		{ "category": "Things that can be frozen", "words": ["FOOD", "ASSETS", "SHOULDER", "SCREEN"], "difficulty": 2 },
+		{ "category": "First 3 + last 3 letters are both words", "words": ["MANAGE", "DONATE", "WANTED", "FORMAT"], "difficulty": 3 }
+	]
+}

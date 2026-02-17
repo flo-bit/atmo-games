@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'pick'", "words": ["LOCK", "FIGHT", "POCKET", "BRAIN"], "difficulty": 0 },
+		{ "category": "___ eye", "words": ["BULL", "FISH", "RED", "BIRD"], "difficulty": 1 },
+		{ "category": "___ hand", "words": ["BACK", "SHORT", "OVER", "SECOND"], "difficulty": 2 },
+		{ "category": "Also a type of rock", "words": ["SLATE", "MARBLE", "CHALK", "FLINT"], "difficulty": 3 }
+	]
+}

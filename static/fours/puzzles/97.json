@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a crown", "words": ["TOOTH", "ROAST", "HEAD", "PINEAPPLE"], "difficulty": 0 },
+		{ "category": "___guard", "words": ["BODY", "LIFE", "SAFE", "COAST"], "difficulty": 1 },
+		{ "category": "Things you 'build'", "words": ["CASE", "BRIDGE", "TRUST", "FIRE"], "difficulty": 2 },
+		{ "category": "Ends in a silent consonant", "words": ["LAMB", "AUTUMN", "DEBRIS", "BALLET"], "difficulty": 3 }
+	]
+}

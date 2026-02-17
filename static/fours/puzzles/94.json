@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'cut'", "words": ["GRASS", "RIBBON", "CLASS", "CORD"], "difficulty": 0 },
+		{ "category": "Up ___", "words": ["BEAT", "TOWN", "DATE", "KEEP"], "difficulty": 1 },
+		{ "category": "Words meaning 'a crowd'", "words": ["MOB", "HORDE", "SWARM", "THRONG"], "difficulty": 2 },
+		{ "category": "___age", "words": ["BAND", "PASS", "BLOCK", "LEVER"], "difficulty": 3 }
+	]
+}

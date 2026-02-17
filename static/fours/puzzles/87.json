@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Kinds of ring", "words": ["BOXING", "WEDDING", "ONION", "TREE"], "difficulty": 0 },
+		{ "category": "No ___", "words": ["BRAINER", "WHERE", "BODY", "SHOW"], "difficulty": 1 },
+		{ "category": "Words meaning 'problem'", "words": ["HITCH", "SNAG", "GLITCH", "CATCH"], "difficulty": 2 },
+		{ "category": "Add 'AT' to front = new word", "words": ["TIRE", "TEND", "TACK", "TONE"], "difficulty": 3 }
+	]
+}

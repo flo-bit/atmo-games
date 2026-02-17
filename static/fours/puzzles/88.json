@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you can skip", "words": ["STONE", "ROPE", "CHAPTER", "TOWN"], "difficulty": 0 },
+		{ "category": "___land", "words": ["FARM", "DREAM", "OVER", "WASTE"], "difficulty": 1 },
+		{ "category": "Words meaning 'basic'", "words": ["PLAIN", "RAW", "BARE", "VANILLA"], "difficulty": 2 },
+		{ "category": "Contains a metal", "words": ["IRONIC", "TINSEL", "LEADEN", "STEELY"], "difficulty": 3 }
+	]
+}

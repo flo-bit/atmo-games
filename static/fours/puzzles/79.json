@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Types of band", "words": ["RUBBER", "ROCK", "WEDDING", "ARM"], "difficulty": 0 },
+		{ "category": "Under ___", "words": ["DOG", "COVER", "LINE", "WORLD"], "difficulty": 1 },
+		{ "category": "Spare ___", "words": ["TIRE", "ROOM", "TIME", "CHANGE"], "difficulty": 2 },
+		{ "category": "Rhymes with a color", "words": ["TED", "SEEN", "RIGHT", "STEW"], "difficulty": 3 }
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a coat", "words": ["PAINT", "DOG", "WINTER", "SUGAR"], "difficulty": 0 },
+		{ "category": "Day ___", "words": ["DREAM", "BREAK", "LIGHT", "CARE"], "difficulty": 1 },
+		{ "category": "Words meaning 'border'", "words": ["EDGE", "VERGE", "BRINK", "MARGIN"], "difficulty": 2 },
+		{ "category": "Starts with a day abbreviation (Mon, Wed, Fri, Sat)", "words": ["MONKEY", "WEDGE", "FRIDGE", "SATIN"], "difficulty": 3 }
+	]
+}

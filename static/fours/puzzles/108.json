@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "___room", "words": ["BATH", "BALL", "CLASS", "SHOW"], "difficulty": 0 },
+		{ "category": "___line", "words": ["AIR", "LIFE", "TREE", "SHORE"], "difficulty": 1 },
+		{ "category": "Things you 'bury'", "words": ["HATCHET", "TREASURE", "HEAD", "LEAD"], "difficulty": 2 },
+		{ "category": "Stress changes the meaning", "words": ["PRESENT", "RECORD", "OBJECT", "MINUTE"], "difficulty": 3 }
+	]
+}

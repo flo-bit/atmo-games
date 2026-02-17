@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Types of club", "words": ["GOLF", "BOOK", "NIGHT", "FIGHT"], "difficulty": 0 },
+		{ "category": "Sun ___", "words": ["BURN", "FLOWER", "DIAL", "ROOF"], "difficulty": 1 },
+		{ "category": "Words meaning 'extreme'", "words": ["MEGA", "UBER", "SUPER", "ULTRA"], "difficulty": 2 },
+		{ "category": "First + last letter = US state abbreviation", "words": ["NAVY", "MOCHA", "OSTRICH", "PASTA"], "difficulty": 3 }
+	]
+}

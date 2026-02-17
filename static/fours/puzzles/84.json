@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things in a kitchen (double meaning)", "words": ["SINK", "ISLAND", "COUNTER", "RANGE"], "difficulty": 0 },
+		{ "category": "Well ___", "words": ["DONE", "KNOWN", "BEING", "OFF"], "difficulty": 1 },
+		{ "category": "Things you 'hold'", "words": ["BREATH", "HAND", "GRUDGE", "FORT"], "difficulty": 2 },
+		{ "category": "Also a type of fabric", "words": ["SILK", "FELT", "LACE", "FLEECE"], "difficulty": 3 }
+	]
+}

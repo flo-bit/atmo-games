@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a pocket", "words": ["JEANS", "POOL", "AIR", "KANGAROO"], "difficulty": 0 },
+		{ "category": "___line", "words": ["SKY", "PIPE", "BASE", "HOT"], "difficulty": 1 },
+		{ "category": "Things you 'push'", "words": ["BUTTON", "LIMIT", "LUCK", "ENVELOPE"], "difficulty": 2 },
+		{ "category": "Add B to front = new word", "words": ["LOCK", "RIDGE", "RINK", "LAZE"], "difficulty": 3 }
+	]
+}

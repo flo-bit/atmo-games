@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you roll", "words": ["DICE", "CARPET", "SLEEVE", "EYE"], "difficulty": 0 },
+		{ "category": "Pen ___", "words": ["NAME", "PAL", "KNIFE", "HOUSE"], "difficulty": 1 },
+		{ "category": "Words meaning 'to understand'", "words": ["GRASP", "FOLLOW", "GET", "CLICK"], "difficulty": 2 },
+		{ "category": "Types of knot", "words": ["REEF", "BOW", "SLIP", "GRANNY"], "difficulty": 3 }
+	]
+}

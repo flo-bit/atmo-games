@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
 
-export const SITE = 'https://flo-bit.dev';
+export const SITE = 'https://unbedenklich.github.io/atmo-games/';
 
 type Permissions = {
 	collections: readonly string[];

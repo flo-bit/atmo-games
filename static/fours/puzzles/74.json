@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you tap", "words": ["SHOULDER", "PHONE", "BARREL", "MAPLE"], "difficulty": 0 },
+		{ "category": "Down ___", "words": ["TOWN", "HILL", "FALL", "LOAD"], "difficulty": 1 },
+		{ "category": "Words meaning 'complain'", "words": ["GRIPE", "BEEF", "MOAN", "WHINE"], "difficulty": 2 },
+		{ "category": "Anagram of a country", "words": ["LAITY", "REIGN", "PLANE", "PAINS"], "difficulty": 3 }
+	]
+}

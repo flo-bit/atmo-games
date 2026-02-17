@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you tie", "words": ["KNOT", "SHOE", "GAME", "RECORD"], "difficulty": 0 },
+		{ "category": "___ end", "words": ["BOOK", "WEEK", "DEAD", "REAR"], "difficulty": 1 },
+		{ "category": "Words meaning 'to sleep'", "words": ["NAP", "SNOOZE", "DOZE", "CRASH"], "difficulty": 2 },
+		{ "category": "Irregular plurals", "words": ["CHILD", "MOUSE", "GOOSE", "TOOTH"], "difficulty": 3 }
+	]
+}

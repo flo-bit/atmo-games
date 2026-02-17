@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a tongue", "words": ["SHOE", "FLAME", "BELT", "BELL"], "difficulty": 0 },
+		{ "category": "___ shot", "words": ["BUCK", "LONG", "MOON", "SLAP"], "difficulty": 1 },
+		{ "category": "Words that are also colors", "words": ["OLIVE", "ROSE", "SAGE", "IVORY"], "difficulty": 2 },
+		{ "category": "Rhymes with a fruit", "words": ["TAPE", "BEACH", "GRIME", "PAIR"], "difficulty": 3 }
+	]
+}

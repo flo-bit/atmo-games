@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things you 'strike'", "words": ["MATCH", "GOLD", "CHORD", "BALANCE"], "difficulty": 0 },
+		{ "category": "Left ___", "words": ["OVER", "FIELD", "WING", "HANDED"], "difficulty": 1 },
+		{ "category": "Words meaning 'tricky'", "words": ["SLY", "CRAFTY", "CUNNING", "WILY"], "difficulty": 2 },
+		{ "category": "Also a type of cocktail", "words": ["SLING", "MULE", "FIZZ", "FLIP"], "difficulty": 3 }
+	]
+}

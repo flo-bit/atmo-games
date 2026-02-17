@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that hiss", "words": ["SNAKE", "STEAM", "CAT", "TIRE"], "difficulty": 0 },
+		{ "category": "Run ___", "words": ["AWAY", "DOWN", "OFF", "WAY"], "difficulty": 1 },
+		{ "category": "Words meaning 'brave'", "words": ["BOLD", "DARING", "GUTSY", "PLUCKY"], "difficulty": 2 },
+		{ "category": "___lock", "words": ["DEAD", "GRID", "PAD", "HEM"], "difficulty": 3 }
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a point", "words": ["PENCIL", "COMPASS", "NEEDLE", "KNIFE"], "difficulty": 0 },
+		{ "category": "Round ___", "words": ["TRIP", "TABLE", "ABOUT", "UP"], "difficulty": 1 },
+		{ "category": "Words meaning 'to avoid'", "words": ["DODGE", "DUCK", "EVADE", "SKIRT"], "difficulty": 2 },
+		{ "category": "Also a chess term", "words": ["FORK", "PIN", "CASTLE", "CHECK"], "difficulty": 3 }
+	]
+}

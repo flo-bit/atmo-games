@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a lock", "words": ["DOOR", "CANAL", "SAFE", "HAIR"], "difficulty": 0 },
+		{ "category": "___ward", "words": ["IN", "OUT", "UP", "AWK"], "difficulty": 1 },
+		{ "category": "Things you 'blow'", "words": ["WHISTLE", "CHANCE", "MIND", "COVER"], "difficulty": 2 },
+		{ "category": "Shakespeare play icons", "words": ["DAGGER", "SKULL", "BALCONY", "FAIRY"], "difficulty": 3 }
+	]
+}

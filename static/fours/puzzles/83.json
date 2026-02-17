@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things that charge", "words": ["BULL", "BATTERY", "PHONE", "CREDIT"], "difficulty": 0 },
+		{ "category": "___top", "words": ["LAP", "TABLE", "ROOF", "TIP"], "difficulty": 1 },
+		{ "category": "Things you 'play'", "words": ["CARD", "FIELD", "PART", "ALONG"], "difficulty": 2 },
+		{ "category": "Anagram of a body part", "words": ["EARTH", "BELOW", "SNIPE", "LION"], "difficulty": 3 }
+	]
+}

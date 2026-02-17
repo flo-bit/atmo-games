@@ -1,0 +1,8 @@
+{
+	"groups": [
+		{ "category": "Things with a spine", "words": ["BOOK", "CACTUS", "HEDGEHOG", "FISH"], "difficulty": 0 },
+		{ "category": "___house", "words": ["BIRD", "TREE", "DOLL", "PLAY"], "difficulty": 1 },
+		{ "category": "Words meaning 'very small'", "words": ["TINY", "MINUTE", "PETITE", "WEE"], "difficulty": 2 },
+		{ "category": "___dog", "words": ["HOT", "UNDER", "BULL", "LAP"], "difficulty": 3 }
+	]
+}
