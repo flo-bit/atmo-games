@@ -2,28 +2,13 @@
 	import { dev } from '$app/environment';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
-	import { ConnectionsGame, DIFFICULTY_COLORS, GAP } from './game.svelte';
+	import { ConnectionsGame, DIFFICULTY_COLORS } from './game.svelte';
 	import type { ConnectionsPuzzle } from './types';
 
-	let { puzzle, puzzleId }: { puzzle: ConnectionsPuzzle; puzzleId: number } = $props();
+	const { puzzle, puzzleId }: { puzzle: ConnectionsPuzzle; puzzleId: number } = $props();
 
+	// svelte-ignore state_referenced_locally
 	const game = new ConnectionsGame(puzzle, puzzleId);
-
-	let boardEl: HTMLDivElement | undefined = $state();
-	let boardWidth: number = $state(0);
-	let tileSize = $derived(boardWidth > 0 ? (boardWidth - 3 * GAP) / 4 : 0);
-
-	$effect(() => {
-		if (boardEl) {
-			const measure = () => {
-				boardWidth = boardEl!.offsetWidth;
-			};
-			measure();
-			const ro = new ResizeObserver(measure);
-			ro.observe(boardEl);
-			return () => ro.disconnect();
-		}
-	});
 </script>
 
 <div class="relative flex w-full flex-col gap-4 px-2 py-4 sm:px-4">
@@ -31,28 +16,29 @@
 		Create four groups of four!
 	</p>
 
-	<div bind:this={boardEl} class="relative w-full" style:height="{tileSize * 4 + GAP * 3}px">
-		{#each game.solvedGroups as group, i (group.category)}
+	<div class="board grid grid-cols-4 gap-2">
+		{#each game.solvedGroups as group (group.category)}
 			<div
-				class="row-pop {DIFFICULTY_COLORS[group.difficulty]} absolute flex flex-col items-center justify-center overflow-hidden rounded-lg text-center"
-				style:top="{i * (tileSize + GAP)}px"
-				style:left="0"
-				style:width="{boardWidth}px"
-				style:height="{tileSize}px"
+				class="row-pop solved-row {DIFFICULTY_COLORS[
+					group.difficulty
+				]} col-span-4 flex flex-col items-center justify-center overflow-hidden rounded-lg text-center"
 			>
 				<span class="text-base font-extrabold sm:text-2xl">{group.category}</span>
-				<span class="text-sm leading-tight font-semibold sm:text-lg">{group.words.join(', ')}</span>
+				<span class="text-sm leading-tight font-semibold sm:text-lg"
+					>{group.words.join(', ')}</span
+				>
 			</div>
 		{/each}
 
-		{#each game.remainingWords as word, idx (word)}
-			{@const row = game.solvedGroups.length + Math.floor(idx / 4)}
-			{@const col = idx % 4}
+		{#each game.remainingWords as word (word)}
 			<button
 				animate:flip={{ duration: 400 }}
-				class="absolute flex cursor-pointer items-center justify-center overflow-hidden rounded-lg px-1 text-center text-sm leading-tight font-extrabold break-all hyphens-auto uppercase sm:text-lg {game.tileClasses(word)} {game.shakingWords.includes(word) ? 'shake' : ''} {game.bouncingWords.includes(word) ? 'bounce' : ''}"
-				style="{game.tileStyle(word)} top: {row * (tileSize + GAP)}px; left: {col *
-					(tileSize + GAP)}px; width: {tileSize}px; height: {tileSize}px;"
+				class="aspect-square flex cursor-pointer items-center justify-center overflow-hidden rounded-lg px-1 text-center text-sm leading-tight font-extrabold break-all hyphens-auto uppercase sm:text-lg {game.tileClasses(
+					word
+				)} {game.shakingWords.includes(word) ? 'shake' : ''} {game.bouncingWords.includes(word)
+					? 'bounce'
+					: ''}"
+				style={game.tileStyle(word)}
 				onclick={() => game.toggleWord(word)}
 				disabled={game.gameState !== 'playing' || game.isSubmitting}
 				lang="en"
@@ -135,6 +121,14 @@
 </div>
 
 <style>
+	.board {
+		container-type: inline-size;
+	}
+
+	.solved-row {
+		height: calc((100cqi - 1.5rem) / 4);
+	}
+
 	@keyframes shake {
 		0%,
 		100% {

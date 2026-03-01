@@ -1,8 +1,6 @@
 import { getMillisUntilMidnight } from './daily';
 import type { ConnectionsGroup, ConnectionsPuzzle } from './types';
 
-export const GAP = 8;
-
 export const DIFFICULTY_COLORS = [
 	'bg-yellow-400 dark:bg-yellow-600 text-stone-900 dark:text-stone-100',
 	'bg-green-400 dark:bg-green-600 text-stone-900 dark:text-stone-100',

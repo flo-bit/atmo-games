@@ -9,7 +9,5 @@ declare global {
 		// interface Platform {}
 	}
 }
-import type {} from '@atcute/atproto';
-import type {} from '@atcute/bluesky';
 
 export {};
