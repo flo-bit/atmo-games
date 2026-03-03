@@ -21,11 +21,17 @@ export function parseUri(uri: string) {
 	return parts.value;
 }
 
-export async function resolveHandle({ handle }: { handle: Handle }) {
+export async function resolveHandle({
+	handle,
+	fetch: fetchFn = fetch
+}: {
+	handle: Handle;
+	fetch?: typeof fetch;
+}) {
 	const handleResolver = new CompositeHandleResolver({
 		methods: {
-			dns: new DohJsonHandleResolver({ dohUrl: DOH_RESOLVER }),
-			http: new WellKnownHandleResolver()
+			dns: new DohJsonHandleResolver({ dohUrl: DOH_RESOLVER, fetch: fetchFn }),
+			http: new WellKnownHandleResolver({ fetch: fetchFn })
 		}
 	});
 

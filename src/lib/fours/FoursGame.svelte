@@ -8,16 +8,32 @@
 	const {
 		puzzle,
 		score,
-		shuffledWords
-	}: { puzzle: FoursPuzzle; score?: FoursScore; shuffledWords?: string[] } = $props();
+		shuffledWords,
+		onGameEnd
+	}: {
+		puzzle: FoursPuzzle;
+		score?: FoursScore;
+		shuffledWords?: string[];
+		onGameEnd?: (score: FoursScore) => void;
+	} = $props();
 
 	// svelte-ignore state_referenced_locally
 	const game = new FoursGame(puzzle, { score, shuffledWords });
+
+	// svelte-ignore state_referenced_locally
+	let hasNotifiedEnd = $state(!!score);
+
+	$effect(() => {
+		if (game.gameState !== 'playing' && !hasNotifiedEnd) {
+			hasNotifiedEnd = true;
+			onGameEnd?.(game.score);
+		}
+	});
 </script>
 
 <div class="relative flex w-full flex-col gap-4 px-2 py-4 sm:px-4">
 	<p class="text-center text-sm font-semibold text-stone-700 dark:text-stone-300">
-		Create four groups of four!
+		Find four groups of four!
 	</p>
 
 	<div class="board grid grid-cols-4 gap-2">

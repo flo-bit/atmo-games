@@ -1,21 +1,23 @@
 import type { PageServerLoad } from './$types';
 import { getDetailedProfile, getRecord, resolveHandle, parseUri } from '$lib/atproto/methods';
 import type { Did, Handle } from '@atcute/lexicons';
-import type { FoursPuzzle } from '$lib/fours/types';
+import type { FoursPuzzle, FoursScore } from '$lib/fours/types';
+import type { FoursScoreRecord } from '$lib/fours/scores/types';
+import { getScoreBacklink } from '$lib/fours/scores/backlinks';
 import { shuffleWords } from '$lib/fours/daily';
 import { error } from '@sveltejs/kit';
 
 const DEFAULT_HANDLE = 'flo-bit.dev';
 const EPOCH = new Date('2026-01-01T00:00:00Z').getTime();
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 	const actor = params.actor || DEFAULT_HANDLE;
 
 	let did: Did;
 	if (actor.startsWith('did:')) {
 		did = actor as Did;
 	} else {
-		did = await resolveHandle({ handle: actor as Handle });
+		did = await resolveHandle({ handle: actor as Handle, fetch });
 	}
 
 	const profile = await getDetailedProfile({ did });
@@ -61,14 +63,39 @@ export const load: PageServerLoad = async ({ params }) => {
 		error(404, 'Puzzle not found');
 	}
 
+	const puzzleUri = `at://${did}/games.atmo.fours.puzzle/${rkey}`;
+
+	// Load existing score server-side if user is signed in
+	let score: FoursScore | null = null;
+	if (locals.did) {
+		try {
+			const backlink = await getScoreBacklink(puzzleUri, locals.did);
+			if (backlink) {
+				const scoreRecord = await getRecord({
+					did: locals.did,
+					collection: 'games.atmo.fours.score',
+					rkey: backlink.rkey
+				}).catch(() => null);
+				if (scoreRecord?.value) {
+					const val = scoreRecord.value as FoursScoreRecord;
+					score = { guesses: val.guesses, won: val.state === 'won' };
+				}
+			}
+		} catch (e) {
+			// Non-fatal — user just starts fresh
+		}
+	}
+
 	return {
-		did,
+		authorDid: did,
 		handle: profile?.handle ?? actor,
 		avatar: profile?.avatar as string | undefined,
 		rkey,
+		puzzleUri,
 		puzzle: record.value as FoursPuzzle,
 		shuffledWords: shuffleWords(record.value as FoursPuzzle),
 		puzzleIndex: puzzleIndex !== undefined ? puzzleIndex + 1 : undefined,
-		puzzleCount
+		puzzleCount,
+		score
 	};
 };
