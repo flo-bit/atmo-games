@@ -27,16 +27,17 @@ export const getCooldownInfo = command(
 	async (input) => {
 		const { platform } = getRequestEvent();
 		const db = platform?.env?.PLACE_DB;
-		if (!db) return { last_paint_at: 0, whitelisted: false };
+		if (!db) return { last_paint_at: 0, whitelisted: false, blocked: false };
 
 		const row = await db
-			.prepare('SELECT last_paint_at, whitelisted FROM user_stats WHERE did = ?')
+			.prepare('SELECT last_paint_at, whitelisted, blocked FROM user_stats WHERE did = ?')
 			.bind(input.did)
-			.first<{ last_paint_at: number; whitelisted: number }>();
+			.first<{ last_paint_at: number; whitelisted: number; blocked: number }>();
 
 		return {
 			last_paint_at: row?.last_paint_at ?? 0,
-			whitelisted: row?.whitelisted === 1
+			whitelisted: row?.whitelisted === 1,
+			blocked: row?.blocked === 1
 		};
 	}
 );

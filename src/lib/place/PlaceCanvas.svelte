@@ -40,7 +40,7 @@
 	let cooldownInterval: ReturnType<typeof setInterval>;
 
 	// Client-side cooldown cache per DID
-	const cooldownCache = new Map<string, { last_paint_at: number; whitelisted: boolean }>();
+	const cooldownCache = new Map<string, { last_paint_at: number; whitelisted: boolean; blocked: boolean }>();
 
 	// Pixel ownership from Jetstream events: "x,y" → did
 	const pixelOwners = new Map<string, string>();
@@ -113,6 +113,7 @@
 		if (!user.did) { console.log('[cooldown] no did'); return false; }
 
 		const info = await ensureCooldownInfo(user.did);
+		if (info.blocked) { console.log('[cooldown] blocked'); return false; }
 		if (info.whitelisted) { console.log('[cooldown] whitelisted'); return true; }
 
 		const lastPaintMs = Math.floor(info.last_paint_at / 1000);
@@ -655,7 +656,7 @@
 				if (saved) {
 					const lastPaintMs = parseInt(saved, 10);
 					if (lastPaintMs > 0) {
-						cooldownCache.set(user.did, { last_paint_at: lastPaintMs * 1000, whitelisted: false });
+						cooldownCache.set(user.did, { last_paint_at: lastPaintMs * 1000, whitelisted: false, blocked: false });
 						startCooldownFrom(lastPaintMs * 1000);
 					}
 				}
@@ -666,6 +667,10 @@
 		const cursor = (Date.now() - 2 * 60 * 1000) * 1000;
 		jetstream = new JetstreamClient(cursor, (x, y, c, did, timeUs) => {
 			const cached = cooldownCache.get(did);
+			if (cached?.blocked) {
+				console.log(`[jetstream] blocked (${x},${y}) did=${did}`);
+				return;
+			}
 			const lastUs = cached?.last_paint_at ?? 0;
 			const elapsedMs = Math.floor((timeUs - lastUs) / 1000);
 			if (lastUs > 0 && elapsedMs >= 0 && elapsedMs < COOLDOWN_MS_INGEST) {
@@ -673,7 +678,7 @@
 				return;
 			}
 			console.log(`[jetstream] accepted (${x},${y}) color=${c} did=${did}${cached ? ` elapsed=${elapsedMs}ms` : ' first-seen'} time_us=${timeUs}`);
-			cooldownCache.set(did, { last_paint_at: timeUs, whitelisted: cached?.whitelisted ?? false });
+			cooldownCache.set(did, { last_paint_at: timeUs, whitelisted: cached?.whitelisted ?? false, blocked: false });
 			pixelOwners.set(`${x},${y}`, did);
 			setPixel(x, y, c);
 
@@ -738,7 +743,7 @@
 	{/if}
 
 	<!-- Top-right info badge -->
-	<div
+	<!-- <div
 		class="pointer-events-none absolute right-2 top-2 flex items-center gap-2 rounded-lg bg-black/60 px-3 py-1.5 font-mono text-xs text-white backdrop-blur-sm sm:right-4 sm:top-4 sm:text-sm"
 	>
 		{#if hoverX >= 0 && hoverX < W && hoverY >= 0 && hoverY < H}
@@ -754,12 +759,12 @@
 		<span
 			class="ml-1 inline-block h-2 w-2 rounded-full {connected ? 'bg-green-400' : 'bg-red-400'}"
 		></span>
-	</div>
+	</div> -->
 
 	<!-- Back link -->
 	<a
 		href="/"
-		class="absolute left-2 top-2 rounded-lg bg-black/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80 sm:left-14 sm:top-4 sm:text-sm"
+		class="absolute left-2 top-2 rounded-lg bg-black/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80 sm:left-4 sm:top-4 sm:text-sm"
 	>
 		&larr; back
 	</a>
@@ -801,17 +806,14 @@
 					></span>
 					<span class="font-mono">({pendingPlace.x}, {pendingPlace.y})</span>
 					<button
-						class="rounded bg-white/20 px-3 py-1 font-medium transition-colors hover:bg-white/30 disabled:opacity-40"
+						class="rounded bg-white/20 px-3 cursor-pointer py-1 font-medium transition-colors hover:bg-white/30 disabled:opacity-40"
 						onclick={confirmPlace}
+						disabled={cooldownRemaining > 0 && !devMode}
 					>
-						{#if cooldownRemaining <= 0}
-							Place
-						{:else}
-							{formatCooldown(cooldownRemaining)}
-						{/if}
+						Place
 					</button>
 					<button
-						class="rounded bg-white/10 px-2 py-1 transition-colors hover:bg-white/20"
+						class="rounded bg-white/10 px-2 cursor-pointer py-1 transition-colors hover:bg-white/20"
 						onclick={cancelPlace}
 					>
 						&times;
@@ -821,17 +823,13 @@
 		{/if}
 
 		<div
-			class="pointer-events-auto flex max-w-sm flex-wrap justify-center gap-0.5 rounded-xl bg-black/60 p-1.5 backdrop-blur-sm sm:max-w-md sm:gap-1 sm:p-2"
+			class="pointer-events-auto grid grid-cols-8 gap-1.5 rounded-xl bg-black/60 p-2 backdrop-blur-sm sm:grid-cols-[repeat(16,minmax(0,1fr))] sm:gap-2 sm:p-2.5"
 		>
 			{#each PALETTE as color, i (i)}
 				<button
-					class="h-6 w-6 rounded-sm border-2 transition-transform hover:scale-110 sm:h-7 sm:w-7
-						{selectedColor === i ? 'border-white scale-110 ring-2 ring-black/60' : 'border-transparent'}"
-					style="background-color:{color};{color === '#FFFFFF' ||
-					color === '#D4D7D9' ||
-					color === '#FFF8B8'
-						? 'box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)'
-						: ''}"
+					class="size-6 sm:size-7 rounded-lg transition-transform hover:scale-105 cursor-pointer
+						{selectedColor === i ? 'scale-105' : ''}"
+					style="background-color:{color};{selectedColor === i ? `outline:2px solid ${color};outline-offset:1.5px` : ''}"
 					onclick={() => (selectedColor = i)}
 					title={PALETTE_NAMES[i]}
 				></button>

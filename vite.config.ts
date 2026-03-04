@@ -6,7 +6,7 @@ import { DEV_PORT } from './src/lib/atproto/port';
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	server: {
-		allowedHosts: ['mild-habitat-perceived-invoice.trycloudflare.com'],
+		allowedHosts: [],
 		host: '127.0.0.1',
 		port: DEV_PORT
 	}

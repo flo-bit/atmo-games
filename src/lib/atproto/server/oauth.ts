@@ -60,7 +60,7 @@ export function createOAuthClient(env?: App.Platform['env']): OAuthClient {
 	if (dev && !env?.OAUTH_PUBLIC_URL) {
 		return new OAuthClient({
 			metadata: {
-				redirect_uris: [`http://127.0.0.1:${DEV_PORT}}${REDIRECT_PATH}`],
+				redirect_uris: [`http://127.0.0.1:${DEV_PORT}${REDIRECT_PATH}`],
 				scope
 			},
 			actorResolver,
