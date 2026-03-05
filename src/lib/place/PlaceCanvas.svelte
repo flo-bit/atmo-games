@@ -653,23 +653,30 @@
 
 		// Restore cooldown from localStorage and seed cache
 		if (user.did) {
-			// Fetch server-side cooldown info first, then overlay localStorage timing
-			const { getCooldownInfo } = await import('./pixel.remote');
-			const serverInfo = await getCooldownInfo({ did: user.did });
-			cooldownCache.set(user.did, serverInfo);
-
-			if (!serverInfo.whitelisted) {
-				try {
-					const saved = localStorage.getItem('million:last_paint');
-					if (saved) {
-						const lastPaintMs = parseInt(saved, 10);
-						if (lastPaintMs > 0) {
-							cooldownCache.set(user.did, { ...serverInfo, last_paint_at: lastPaintMs * 1000 });
-							startCooldownFrom(lastPaintMs * 1000);
-						}
+			// Seed cache from localStorage immediately, then update with server info
+			try {
+				const saved = localStorage.getItem('million:last_paint');
+				if (saved) {
+					const lastPaintMs = parseInt(saved, 10);
+					if (lastPaintMs > 0) {
+						cooldownCache.set(user.did, { last_paint_at: lastPaintMs * 1000, whitelisted: false, blocked: false });
+						startCooldownFrom(lastPaintMs * 1000);
 					}
-				} catch {}
-			}
+				}
+			} catch {}
+
+			// Fetch server-side cooldown info (whitelist/block status) in background
+			const fetchDid = user.did;
+			import('./pixel.remote').then(({ getCooldownInfo }) =>
+				getCooldownInfo({ did: fetchDid }).then((serverInfo) => {
+					const cached = cooldownCache.get(fetchDid);
+					cooldownCache.set(fetchDid, {
+						last_paint_at: cached?.last_paint_at ?? serverInfo.last_paint_at,
+						whitelisted: serverInfo.whitelisted,
+						blocked: serverInfo.blocked,
+					});
+				})
+			).catch(() => {});
 		}
 
 		// Periodically refresh cooldown info for users who painted recently
