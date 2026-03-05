@@ -651,32 +651,44 @@
 		scheduleRender();
 		loaded = true;
 
-		// Restore cooldown from localStorage and seed cache
+		// Fetch server-side cooldown info, fall back to localStorage
 		if (user.did) {
-			// Seed cache from localStorage immediately, then update with server info
-			try {
-				const saved = localStorage.getItem('million:last_paint');
-				if (saved) {
-					const lastPaintMs = parseInt(saved, 10);
-					if (lastPaintMs > 0) {
-						cooldownCache.set(user.did, { last_paint_at: lastPaintMs * 1000, whitelisted: false, blocked: false });
-						startCooldownFrom(lastPaintMs * 1000);
-					}
-				}
-			} catch {}
-
-			// Fetch server-side cooldown info (whitelist/block status) in background
-			const fetchDid = user.did;
+			const initDid = user.did;
 			import('./pixel.remote').then(({ getCooldownInfo }) =>
-				getCooldownInfo({ did: fetchDid }).then((serverInfo) => {
-					const cached = cooldownCache.get(fetchDid);
-					cooldownCache.set(fetchDid, {
-						last_paint_at: cached?.last_paint_at ?? serverInfo.last_paint_at,
+				getCooldownInfo({ did: initDid }).then((serverInfo) => {
+					// Use localStorage timing if more recent than server
+					let lastPaintAt = serverInfo.last_paint_at;
+					try {
+						const saved = localStorage.getItem('million:last_paint');
+						if (saved) {
+							const localUs = parseInt(saved, 10) * 1000;
+							if (localUs > lastPaintAt) lastPaintAt = localUs;
+						}
+					} catch {}
+
+					cooldownCache.set(initDid, {
+						last_paint_at: lastPaintAt,
 						whitelisted: serverInfo.whitelisted,
 						blocked: serverInfo.blocked,
 					});
+
+					if (!serverInfo.whitelisted) {
+						startCooldownFrom(lastPaintAt);
+					}
 				})
-			).catch(() => {});
+			).catch(() => {
+				// Server unreachable — fall back to localStorage with unknown whitelist status
+				try {
+					const saved = localStorage.getItem('million:last_paint');
+					if (saved) {
+						const lastPaintMs = parseInt(saved, 10);
+						if (lastPaintMs > 0) {
+							cooldownCache.set(initDid, { last_paint_at: lastPaintMs * 1000, whitelisted: false, blocked: false });
+							startCooldownFrom(lastPaintMs * 1000);
+						}
+					}
+				} catch {}
+			});
 		}
 
 		// Periodically refresh cooldown info for users who painted recently
@@ -708,7 +720,7 @@
 			}
 			const lastUs = cached?.last_paint_at ?? 0;
 			const elapsedMs = Math.floor((timeUs - lastUs) / 1000);
-			if (!cached?.whitelisted && lastUs > 0 && elapsedMs >= 0 && elapsedMs < COOLDOWN_MS_INGEST) {
+			if (cached && !cached.whitelisted && lastUs > 0 && elapsedMs >= 0 && elapsedMs < COOLDOWN_MS_INGEST) {
 				console.log(`[jetstream] rate-limited (${x},${y}) color=${c} did=${did} elapsed=${elapsedMs}ms`);
 				return;
 			}
