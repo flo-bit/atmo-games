@@ -15,9 +15,4 @@
 	<meta name="twitter:image" content="/thousands/og.png" />
 </svelte:head>
 
-<ThousandsCanvas
-	canvas={data.canvas}
-	cursor={data.cursor}
-	blocked={data.blocked}
-	whitelisted={data.whitelisted}
-/>
+<ThousandsCanvas canvas={data.canvas} cursor={data.cursor} blocked={data.blocked} />

@@ -6,6 +6,7 @@
 	import { atProtoLoginModalState } from '@foxui/social';
 	import { toast } from '@foxui/core';
 	import { createWebHaptics } from 'web-haptics/svelte';
+	import { resolve } from '$app/paths';
 
 	const { trigger: haptic, destroy: destroyHaptics } = createWebHaptics();
 
@@ -14,8 +15,6 @@
 	const MIN_SCALE = 0.3;
 	const MAX_SCALE = 50;
 	const GRID_MIN_SCALE = 8;
-	const COOLDOWN_MS = 60_000;
-	const COOLDOWN_MS_INGEST = 55_000;
 	const TOUCH_DRAG_THRESHOLD = 10;
 	const MOUSE_DRAG_THRESHOLD = 2;
 
@@ -23,17 +22,15 @@
 		canvas: Uint8Array | null;
 		cursor: number;
 		blocked: string[];
-		whitelisted: string[];
 	}
 
-	let { canvas: initialCanvas, cursor: initialCursor, blocked: initialBlocked, whitelisted: initialWhitelisted }: Props = $props();
+	let { canvas: initialCanvas, cursor: initialCursor, blocked: initialBlocked }: Props = $props();
 
-	// Block/whitelist sets — loaded at page load, refreshed every minute
+	// Block set — loaded at page load, refreshed every minute
 	let blockedSet = $state(new Set(initialBlocked));
-	let whitelistedSet = $state(new Set(initialWhitelisted));
 
 	// Reactive UI state
-	let selectedColor = $state(4); // Black (index 4 in new palette)
+	let selectedColor = $state<number | null>(4); // null = no color selected
 	let hoverX = $state(-1);
 	let hoverY = $state(-1);
 	let connected = $state(false);
@@ -41,23 +38,9 @@
 	let loaded = $state(false);
 	let devMode = $state(false);
 
-	// Cooldown
-	let cooldownRemaining = $state(0);
-	let cooldownInterval: ReturnType<typeof setInterval>;
-
-	// Client-side cooldown cache per DID: just the last_paint_at timestamp (microseconds)
-	const cooldownCache = new Map<string, number>();
-	const verifiedDids = new Set<string>();
 	let listRefreshInterval: ReturnType<typeof setInterval>;
 
-	// Pixel ownership from Jetstream events: "x,y" → did
-	const pixelOwners = new Map<string, string>();
-
-	// Confirm flow
 	let isTouch = $state(false);
-	let pendingPlace: { x: number; y: number } | null = $state(null);
-	let pixelAuthor: string | null = $state(null);
-	let pixelAuthorLoading = $state(false);
 
 	// DOM
 	let containerEl: HTMLDivElement;
@@ -101,56 +84,10 @@
 	/*  Cooldown                                                           */
 	/* ------------------------------------------------------------------ */
 
-	async function ensureCooldownTimestamp(did: string): Promise<number> {
-		const cached = cooldownCache.get(did);
-		if (cached !== undefined) return cached;
-
-		const { getCooldownInfo } = await import('./pixel.remote');
-		const info = await getCooldownInfo({ did });
-		cooldownCache.set(did, info.last_paint_at);
-		verifiedDids.add(did);
-		return info.last_paint_at;
-	}
-
-	async function canPlace(): Promise<boolean> {
+	function canPlace(): boolean {
 		if (devMode) return true;
 		if (!user.did) return false;
-		if (blockedSet.has(user.did)) return false;
-		if (whitelistedSet.has(user.did)) return true;
-
-		const lastPaintAt = await ensureCooldownTimestamp(user.did);
-		const elapsed = Date.now() - Math.floor(lastPaintAt / 1000);
-		return elapsed >= COOLDOWN_MS;
-	}
-
-	function startCooldownFrom(lastPaintUs: number) {
-		const lastPaintMs = Math.floor(lastPaintUs / 1000);
-		const elapsed = Date.now() - lastPaintMs;
-		const remaining = Math.max(0, COOLDOWN_MS - elapsed);
-		if (remaining <= 0) return;
-
-		cooldownRemaining = remaining;
-		if (cooldownInterval) clearInterval(cooldownInterval);
-		cooldownInterval = setInterval(() => {
-			const now = Date.now();
-			const el = now - lastPaintMs;
-			cooldownRemaining = Math.max(0, COOLDOWN_MS - el);
-			if (cooldownRemaining <= 0) clearInterval(cooldownInterval);
-		}, 100);
-	}
-
-	function startCooldown() {
-		if (!user.did) return;
-		const now = Date.now() * 1000; // microseconds
-		cooldownCache.set(user.did, now);
-		startCooldownFrom(now);
-	}
-
-	function formatCooldown(ms: number): string {
-		const s = Math.ceil(ms / 1000);
-		const min = Math.floor(s / 60);
-		const sec = s % 60;
-		return `${min}:${sec.toString().padStart(2, '0')}`;
+		return !blockedSet.has(user.did);
 	}
 
 	/* ------------------------------------------------------------------ */
@@ -192,60 +129,20 @@
 	}
 
 	/* ------------------------------------------------------------------ */
-	/*  Pixel info                                                         */
-	/* ------------------------------------------------------------------ */
-
-	async function fetchPixelAuthor(x: number, y: number) {
-		pixelAuthor = null;
-		pixelAuthorLoading = true;
-		try {
-			// Only use in-memory Jetstream cache (no persistent pixel ownership storage)
-			const did = pixelOwners.get(`${x},${y}`);
-			if (!did) { pixelAuthorLoading = false; return; }
-			// Try to resolve handle, checking localStorage cache first
-			try {
-				const cacheKey = `thousands-profile-${did}`;
-				const cached = localStorage.getItem(cacheKey);
-				if (cached) {
-					pixelAuthor = cached;
-				} else {
-					let handle: string;
-					const profile = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${did}`);
-					if (profile.ok) {
-						const data = await profile.json();
-						handle = `@${data.handle}`;
-					} else {
-						handle = did.slice(0, 16) + '\u2026';
-					}
-					pixelAuthor = handle;
-					try { localStorage.setItem(cacheKey, handle); } catch {}
-				}
-			} catch {
-				pixelAuthor = did.slice(0, 16) + '\u2026';
-			}
-		} catch {
-			/* offline */
-		}
-		pixelAuthorLoading = false;
-	}
-
-	/* ------------------------------------------------------------------ */
 	/*  Pixel placement                                                    */
 	/* ------------------------------------------------------------------ */
 
 	let placing = false;
 
-	async function placePixel(x: number, y: number) {
-		if (placing) { console.log('[place] blocked: already placing'); return; }
+	function placePixel(x: number, y: number) {
+		if (placing) return;
+		if (selectedColor === null) return;
 		if (!user.isLoggedIn) {
-			console.log('[place] blocked: not logged in');
 			atProtoLoginModalState.show();
 			return;
 		}
-		const allowed = await canPlace();
-		console.log('[place] canPlace:', allowed);
-		if (!allowed) {
-			toast.error("You can't place yet");
+		if (!canPlace()) {
+			toast.error("You're blocked from placing pixels");
 			return;
 		}
 		placing = true;
@@ -257,37 +154,17 @@
 			{ duration: 30 },
 			{ delay: 60, duration: 40, intensity: 1 },
 		]);
-		if (!devMode) startCooldown();
 
-		// Publish AT Proto record
 		const rkey = createTID();
-		console.log('[place] publishing record', { x, y, color: c, rkey });
 		putRecord({
 			collection: 'games.atmo.thousands.pixel',
 			rkey,
 			record: { x, y, color: c }
-		}).then(() => console.log('[place] record published')).catch((e) => {
+		}).catch((e) => {
 			console.error('[place] putRecord failed', e);
 			setPixel(x, y, prevColor);
 			toast.error('Failed to place pixel, try to log out and back in');
 		}).finally(() => { placing = false; });
-
-		// Persist cooldown locally so it survives page refresh
-		try { localStorage.setItem('thousands:last_paint', String(Date.now())); } catch {};
-	}
-
-	function confirmPlace() {
-		if (!pendingPlace) return;
-		placePixel(pendingPlace.x, pendingPlace.y);
-		pendingPlace = null;
-		scheduleRender();
-	}
-
-	function cancelPlace() {
-		pendingPlace = null;
-		pixelAuthor = null;
-		pixelAuthorLoading = false;
-		scheduleRender();
 	}
 
 	/* ------------------------------------------------------------------ */
@@ -348,23 +225,8 @@
 			ctx.stroke();
 		}
 
-		// Pending placement highlight
-		if (pendingPlace) {
-			const { x, y } = pendingPlace;
-			ctx.setTransform(scale * dpr, 0, 0, scale * dpr, ox * dpr, oy * dpr);
-			ctx.globalAlpha = 0.7;
-			ctx.fillStyle = PALETTE[selectedColor];
-			ctx.fillRect(x, y, 1, 1);
-			ctx.globalAlpha = 1;
-			ctx.strokeStyle = 'white';
-			ctx.lineWidth = 3 / scale;
-			ctx.strokeRect(x, y, 1, 1);
-			ctx.strokeStyle = 'black';
-			ctx.lineWidth = 1.5 / scale;
-			ctx.strokeRect(x, y, 1, 1);
-		}
-		// Hover highlight + preview (desktop)
-		else if (hoverX >= 0 && hoverX < W && hoverY >= 0 && hoverY < H) {
+		// Hover highlight + color preview (only when a color is selected)
+		if (selectedColor !== null && hoverX >= 0 && hoverX < W && hoverY >= 0 && hoverY < H) {
 			ctx.setTransform(scale * dpr, 0, 0, scale * dpr, ox * dpr, oy * dpr);
 			ctx.globalAlpha = 0.4;
 			ctx.fillStyle = PALETTE[selectedColor];
@@ -481,16 +343,14 @@
 		scheduleRender();
 	}
 
-	// Window-level: end drag, optionally select pixel for placement
+	// Window-level: end drag, place pixel on click
 	function onWindowDragEnd(e: MouseEvent) {
 		window.removeEventListener('mousemove', onWindowDrag);
 		window.removeEventListener('mouseup', onWindowDragEnd);
 		if (dragging && !dragged) {
 			const [cx, cy] = toCanvas(e.clientX, e.clientY);
 			if (cx >= 0 && cx < W && cy >= 0 && cy < H) {
-				pendingPlace = { x: cx, y: cy };
-				fetchPixelAuthor(cx, cy);
-				scheduleRender();
+				placePixel(cx, cy);
 			}
 		}
 		dragging = false;
@@ -550,8 +410,7 @@
 			if (dragging && !dragged) {
 				const [cx, cy] = toCanvas(dsx, dsy);
 				if (cx >= 0 && cx < W && cy >= 0 && cy < H) {
-					pendingPlace = { x: cx, y: cy };
-					fetchPixelAuthor(cx, cy);
+					placePixel(cx, cy);
 				}
 			}
 			dragging = false;
@@ -640,72 +499,20 @@
 		scheduleRender();
 		loaded = true;
 
-		// Fetch server-side cooldown timestamp for the logged-in user, fall back to localStorage
-		if (user.did) {
-			const initDid = user.did;
-			import('./pixel.remote').then(({ getCooldownInfo }) =>
-				getCooldownInfo({ did: initDid }).then((serverInfo) => {
-					// Use localStorage timing if more recent than server
-					let lastPaintAt = serverInfo.last_paint_at;
-					try {
-						const saved = localStorage.getItem('thousands:last_paint');
-						if (saved) {
-							const localUs = parseInt(saved, 10) * 1000;
-							if (localUs > lastPaintAt) lastPaintAt = localUs;
-						}
-					} catch {}
-
-					cooldownCache.set(initDid, lastPaintAt);
-					verifiedDids.add(initDid);
-
-					if (!whitelistedSet.has(initDid)) {
-						startCooldownFrom(lastPaintAt);
-					}
-				})
-			).catch(() => {
-				// Server unreachable — fall back to localStorage
-				try {
-					const saved = localStorage.getItem('thousands:last_paint');
-					if (saved) {
-						const lastPaintMs = parseInt(saved, 10);
-						if (lastPaintMs > 0) {
-							cooldownCache.set(initDid, lastPaintMs * 1000);
-							startCooldownFrom(lastPaintMs * 1000);
-						}
-					}
-				} catch {}
-			});
-		}
-
-		// Refresh block/whitelist lists every minute
+		// Refresh block list every minute
 		listRefreshInterval = setInterval(async () => {
 			try {
-				const { getLists } = await import('./pixel.remote');
-				const lists = await getLists({});
-				blockedSet = new Set(lists.blocked);
-				whitelistedSet = new Set(lists.whitelisted);
+				const { getBlockList } = await import('./pixel.remote');
+				const { blocked } = await getBlockList({});
+				blockedSet = new Set(blocked);
 			} catch {}
-		}, 60_000);
+		}, 600_000);
 
 		// Start Jetstream from 2 minutes ago to cover any gap since the canvas was last baked
 		const cursor = (Date.now() - 2 * 60 * 1000) * 1000;
 		jetstream = new JetstreamClient(cursor, (x, y, c, did, timeUs) => {
 			if (blockedSet.has(did)) return;
-			const lastUs = cooldownCache.get(did) ?? 0;
-			const elapsedMs = Math.floor((timeUs - lastUs) / 1000);
-			if (verifiedDids.has(did) && !whitelistedSet.has(did) && lastUs > 0 && elapsedMs >= 0 && elapsedMs < COOLDOWN_MS_INGEST) {
-				return;
-			}
-			cooldownCache.set(did, timeUs);
-			verifiedDids.add(did);
-			pixelOwners.set(`${x},${y}`, did);
 			setPixel(x, y, c);
-
-			// Start cooldown timer if this is the local user's pixel
-			if (did === user.did && !devMode) {
-				startCooldownFrom(timeUs);
-				try { localStorage.setItem('thousands:last_paint', String(Math.floor(timeUs / 1000))); } catch {}
-			}
 		});
 		jetstream.onStatusChange = (s) => (connected = s);
 		jetstream.connect();
@@ -723,7 +530,6 @@
 		jetstream?.disconnect();
 		resizeObs?.disconnect();
 		if (listRefreshInterval) clearInterval(listRefreshInterval);
-		if (cooldownInterval) clearInterval(cooldownInterval);
 		if (rafId) cancelAnimationFrame(rafId);
 		if (typeof window !== 'undefined') {
 			window.removeEventListener('keydown', onKey);
@@ -762,28 +568,9 @@
 		</div>
 	{/if}
 
-	<!-- Top-right info badge -->
-	<!-- <div
-		class="pointer-events-none absolute right-2 top-2 flex items-center gap-2 rounded-lg bg-black/60 px-3 py-1.5 font-mono text-xs text-white backdrop-blur-sm sm:right-4 sm:top-4 sm:text-sm"
-	>
-		{#if hoverX >= 0 && hoverX < W && hoverY >= 0 && hoverY < H}
-			<span>({hoverX}, {hoverY})</span>
-			<span class="opacity-40">|</span>
-		{/if}
-		<span>{displayScale.toFixed(1)}x</span>
-		{#if devMode}
-			<span class="rounded bg-amber-500/80 px-1 py-0.5 text-[10px] font-bold leading-none"
-				>DEV</span
-			>
-		{/if}
-		<span
-			class="ml-1 inline-block h-2 w-2 rounded-full {connected ? 'bg-green-400' : 'bg-red-400'}"
-		></span>
-	</div> -->
-
 	<!-- Back link -->
 	<a
-		href="/"
+		href={resolve("/")}
 		class="absolute left-2 top-2 rounded-lg bg-black/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80 sm:left-4 sm:top-4 sm:text-sm"
 	>
 		&larr; back
@@ -794,63 +581,15 @@
 		class="pointer-events-none absolute bottom-0 left-0 right-0 flex flex-col items-center gap-1.5 p-2 sm:gap-2 sm:p-3"
 		style="padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.5rem);"
 	>
-		{#if pixelAuthor}
-			<span
-				class="rounded-full bg-black/50 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm sm:text-xs"
-				>placed by {pixelAuthor}</span
-			>
-		{/if}
-
-		{#if cooldownRemaining > 0 && !devMode}
-			<div
-				class="flex items-center gap-2 rounded-lg bg-black/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm sm:text-sm"
-			>
-				<div class="h-1.5 w-24 overflow-hidden rounded-full bg-white/20 sm:w-32">
-					<div
-						class="h-full rounded-full bg-white/70 transition-all duration-100"
-						style="width: {((COOLDOWN_MS - cooldownRemaining) / COOLDOWN_MS) * 100}%"
-					></div>
-				</div>
-				<span>Next pixel in {formatCooldown(cooldownRemaining)}</span>
-			</div>
-		{/if}
-
-		{#if pendingPlace}
-			<div
-				class="pointer-events-auto flex flex-col items-center gap-1 rounded-lg bg-black/70 px-3 py-2 backdrop-blur-sm"
-			>
-				<div class="flex items-center gap-2 text-xs text-white sm:text-sm">
-					<span
-						class="inline-block h-5 w-5 rounded border border-white/30"
-						style="background-color: {PALETTE[selectedColor]}"
-					></span>
-					<span class="font-mono">({pendingPlace.x}, {pendingPlace.y})</span>
-					<button
-						class="rounded bg-white/20 px-3 cursor-pointer py-1 font-medium transition-colors hover:bg-white/30 disabled:opacity-40"
-						onclick={confirmPlace}
-						disabled={cooldownRemaining > 0 && !devMode}
-					>
-						Place
-					</button>
-					<button
-						class="rounded bg-white/10 px-2 cursor-pointer py-1 transition-colors hover:bg-white/20"
-						onclick={cancelPlace}
-					>
-						&times;
-					</button>
-				</div>
-			</div>
-		{/if}
-
 		<div
-			class="pointer-events-auto grid grid-cols-8 gap-1.5 rounded-xl bg-black/60 p-2 backdrop-blur-sm sm:grid-cols-[repeat(16,minmax(0,1fr))] sm:gap-2 sm:p-2.5"
+			class="pointer-events-auto grid grid-cols-8 gap-1.5 rounded-xl bg-black/60 p-2 backdrop-blur-sm sm:grid-cols-16 sm:gap-2 sm:p-2.5"
 		>
 			{#each PALETTE as color, i (i)}
 				<button
 					class="size-6 sm:size-7 rounded-lg transition-transform hover:scale-105 cursor-pointer
 						{selectedColor === i ? 'scale-105' : ''}"
 					style="background-color:{color};{selectedColor === i ? `outline:2px solid ${color};outline-offset:1.5px` : ''}"
-					onclick={() => (selectedColor = i)}
+					onclick={() => (selectedColor = selectedColor === i ? null : i)}
 					title={PALETTE_NAMES[i]}
 				></button>
 			{/each}

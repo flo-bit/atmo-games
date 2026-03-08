@@ -4,10 +4,9 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ platform }) => {
 	const kv = platform?.env?.PLACE_KV;
 
-	const [canvasData, blockJson, whitelistJson] = await Promise.all([
+	const [canvasData, blockJson] = await Promise.all([
 		kv ? getCanvas(kv) : null,
-		kv ? kv.get('block', 'text') : null,
-		kv ? kv.get('whitelist', 'text') : null
+		kv ? kv.get('block', 'text') : null
 	]);
 
 	const cursor = canvasData?.cursor ?? 0;
@@ -16,7 +15,6 @@ export const load: PageServerLoad = async ({ platform }) => {
 	return {
 		canvas: canvasData ? new Uint8Array(canvasData.canvas) : null,
 		cursor,
-		blocked: blockJson ? (JSON.parse(blockJson) as string[]) : [],
-		whitelisted: whitelistJson ? (JSON.parse(whitelistJson) as string[]) : []
+		blocked: blockJson ? (JSON.parse(blockJson) as string[]) : []
 	};
 };
