@@ -1,43 +1,35 @@
 import { command, getRequestEvent } from '$app/server';
 import * as v from 'valibot';
 
-export const getPixelInfo = command(
-	v.object({
-		x: v.number(),
-		y: v.number()
-	}),
+/** Get the cooldown timestamp for a single DID — 1 KV read. */
+export const getCooldownInfo = command(
+	v.object({ did: v.string() }),
 	async (input) => {
 		const { platform } = getRequestEvent();
-		const db = platform?.env?.PLACE_DB;
-		if (!db) return null;
+		const kv = platform?.env?.PLACE_KV;
+		if (!kv) return { last_paint_at: 0 };
 
-		const row = await db
-			.prepare('SELECT did, painted_at FROM pixels WHERE x = ? AND y = ?')
-			.bind(input.x, input.y)
-			.first<{ did: string; painted_at: number }>();
-
-		return row ? { did: row.did, painted_at: row.painted_at } : null;
+		const val = await kv.get(`cooldown:${input.did}`, 'text');
+		return { last_paint_at: val ? parseInt(val, 10) : 0 };
 	}
 );
 
-export const getCooldownInfo = command(
-	v.object({
-		did: v.string()
-	}),
-	async (input) => {
+/** Get the full block and whitelist arrays — 2 KV reads. */
+export const getLists = command(
+	v.object({}),
+	async () => {
 		const { platform } = getRequestEvent();
-		const db = platform?.env?.PLACE_DB;
-		if (!db) return { last_paint_at: 0, whitelisted: false, blocked: false };
+		const kv = platform?.env?.PLACE_KV;
+		if (!kv) return { blocked: [] as string[], whitelisted: [] as string[] };
 
-		const row = await db
-			.prepare('SELECT last_paint_at, whitelisted, blocked FROM user_stats WHERE did = ?')
-			.bind(input.did)
-			.first<{ last_paint_at: number; whitelisted: number; blocked: number }>();
+		const [blockJson, whitelistJson] = await Promise.all([
+			kv.get('block', 'text'),
+			kv.get('whitelist', 'text')
+		]);
 
 		return {
-			last_paint_at: row?.last_paint_at ?? 0,
-			whitelisted: row?.whitelisted === 1,
-			blocked: row?.blocked === 1
+			blocked: blockJson ? (JSON.parse(blockJson) as string[]) : [],
+			whitelisted: whitelistJson ? (JSON.parse(whitelistJson) as string[]) : []
 		};
 	}
 );

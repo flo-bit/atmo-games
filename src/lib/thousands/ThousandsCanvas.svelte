@@ -22,9 +22,15 @@
 	interface Props {
 		canvas: Uint8Array | null;
 		cursor: number;
+		blocked: string[];
+		whitelisted: string[];
 	}
 
-	let { canvas: initialCanvas, cursor: initialCursor }: Props = $props();
+	let { canvas: initialCanvas, cursor: initialCursor, blocked: initialBlocked, whitelisted: initialWhitelisted }: Props = $props();
+
+	// Block/whitelist sets — loaded at page load, refreshed every minute
+	let blockedSet = $state(new Set(initialBlocked));
+	let whitelistedSet = $state(new Set(initialWhitelisted));
 
 	// Reactive UI state
 	let selectedColor = $state(4); // Black (index 4 in new palette)
@@ -39,11 +45,10 @@
 	let cooldownRemaining = $state(0);
 	let cooldownInterval: ReturnType<typeof setInterval>;
 
-	// Client-side cooldown cache per DID
-	const cooldownCache = new Map<string, { last_paint_at: number; whitelisted: boolean; blocked: boolean }>();
+	// Client-side cooldown cache per DID: just the last_paint_at timestamp (microseconds)
+	const cooldownCache = new Map<string, number>();
 	const verifiedDids = new Set<string>();
-	const recentPainters = new Set<string>();
-	let cooldownRefreshInterval: ReturnType<typeof setInterval>;
+	let listRefreshInterval: ReturnType<typeof setInterval>;
 
 	// Pixel ownership from Jetstream events: "x,y" → did
 	const pixelOwners = new Map<string, string>();
@@ -96,32 +101,25 @@
 	/*  Cooldown                                                           */
 	/* ------------------------------------------------------------------ */
 
-	async function ensureCooldownInfo(did: string): Promise<{ last_paint_at: number; whitelisted: boolean }> {
+	async function ensureCooldownTimestamp(did: string): Promise<number> {
 		const cached = cooldownCache.get(did);
-		if (cached) {
-			console.log('[cooldown] cache hit for', did, cached);
-			return cached;
-		}
+		if (cached !== undefined) return cached;
 
-		console.log('[cooldown] cache miss, fetching for', did);
 		const { getCooldownInfo } = await import('./pixel.remote');
 		const info = await getCooldownInfo({ did });
-		console.log('[cooldown] fetched', info);
-		cooldownCache.set(did, info);
-		return info;
+		cooldownCache.set(did, info.last_paint_at);
+		verifiedDids.add(did);
+		return info.last_paint_at;
 	}
 
 	async function canPlace(): Promise<boolean> {
 		if (devMode) return true;
-		if (!user.did) { console.log('[cooldown] no did'); return false; }
+		if (!user.did) return false;
+		if (blockedSet.has(user.did)) return false;
+		if (whitelistedSet.has(user.did)) return true;
 
-		const info = await ensureCooldownInfo(user.did);
-		if (info.blocked) { console.log('[cooldown] blocked'); return false; }
-		if (info.whitelisted) { console.log('[cooldown] whitelisted'); return true; }
-
-		const lastPaintMs = Math.floor(info.last_paint_at / 1000);
-		const elapsed = Date.now() - lastPaintMs;
-		console.log('[cooldown] last_paint_at:', info.last_paint_at, 'elapsed:', elapsed, 'needed:', COOLDOWN_MS);
+		const lastPaintAt = await ensureCooldownTimestamp(user.did);
+		const elapsed = Date.now() - Math.floor(lastPaintAt / 1000);
 		return elapsed >= COOLDOWN_MS;
 	}
 
@@ -143,13 +141,8 @@
 
 	function startCooldown() {
 		if (!user.did) return;
-
 		const now = Date.now() * 1000; // microseconds
-		cooldownCache.set(user.did, {
-			...cooldownCache.get(user.did)!,
-			last_paint_at: now
-		});
-
+		cooldownCache.set(user.did, now);
 		startCooldownFrom(now);
 	}
 
@@ -206,13 +199,8 @@
 		pixelAuthor = null;
 		pixelAuthorLoading = true;
 		try {
-			// Check local cache first, then fall back to D1
-			let did = pixelOwners.get(`${x},${y}`);
-			if (!did) {
-				const { getPixelInfo } = await import('./pixel.remote');
-				const info = await getPixelInfo({ x, y });
-				did = info?.did ?? null;
-			}
+			// Only use in-memory Jetstream cache (no persistent pixel ownership storage)
+			const did = pixelOwners.get(`${x},${y}`);
 			if (!did) { pixelAuthorLoading = false; return; }
 			// Try to resolve handle, checking localStorage cache first
 			try {
@@ -652,7 +640,7 @@
 		scheduleRender();
 		loaded = true;
 
-		// Fetch server-side cooldown info, fall back to localStorage
+		// Fetch server-side cooldown timestamp for the logged-in user, fall back to localStorage
 		if (user.did) {
 			const initDid = user.did;
 			import('./pixel.remote').then(({ getCooldownInfo }) =>
@@ -667,25 +655,21 @@
 						}
 					} catch {}
 
-					cooldownCache.set(initDid, {
-						last_paint_at: lastPaintAt,
-						whitelisted: serverInfo.whitelisted,
-						blocked: serverInfo.blocked,
-					});
+					cooldownCache.set(initDid, lastPaintAt);
 					verifiedDids.add(initDid);
 
-					if (!serverInfo.whitelisted) {
+					if (!whitelistedSet.has(initDid)) {
 						startCooldownFrom(lastPaintAt);
 					}
 				})
 			).catch(() => {
-				// Server unreachable — fall back to localStorage with unknown whitelist status
+				// Server unreachable — fall back to localStorage
 				try {
 					const saved = localStorage.getItem('thousands:last_paint');
 					if (saved) {
 						const lastPaintMs = parseInt(saved, 10);
 						if (lastPaintMs > 0) {
-							cooldownCache.set(initDid, { last_paint_at: lastPaintMs * 1000, whitelisted: false, blocked: false });
+							cooldownCache.set(initDid, lastPaintMs * 1000);
 							startCooldownFrom(lastPaintMs * 1000);
 						}
 					}
@@ -693,43 +677,27 @@
 			});
 		}
 
-		// Periodically refresh cooldown info for users who painted recently
-		cooldownRefreshInterval = setInterval(async () => {
-			const dids = [...recentPainters];
-			recentPainters.clear();
-			if (dids.length === 0) return;
+		// Refresh block/whitelist lists every minute
+		listRefreshInterval = setInterval(async () => {
 			try {
-				const { getCooldownInfo } = await import('./pixel.remote');
-				for (const did of dids) {
-					const fresh = await getCooldownInfo({ did });
-					const cached = cooldownCache.get(did);
-					cooldownCache.set(did, {
-						last_paint_at: cached?.last_paint_at ?? fresh.last_paint_at,
-						whitelisted: fresh.whitelisted,
-						blocked: fresh.blocked,
-					});
-					verifiedDids.add(did);
-				}
+				const { getLists } = await import('./pixel.remote');
+				const lists = await getLists({});
+				blockedSet = new Set(lists.blocked);
+				whitelistedSet = new Set(lists.whitelisted);
 			} catch {}
 		}, 60_000);
 
 		// Start Jetstream from 2 minutes ago to cover any gap since the canvas was last baked
 		const cursor = (Date.now() - 2 * 60 * 1000) * 1000;
 		jetstream = new JetstreamClient(cursor, (x, y, c, did, timeUs) => {
-			const cached = cooldownCache.get(did);
-			if (cached?.blocked) {
-				console.log(`[jetstream] blocked (${x},${y}) did=${did}`);
-				return;
-			}
-			const lastUs = cached?.last_paint_at ?? 0;
+			if (blockedSet.has(did)) return;
+			const lastUs = cooldownCache.get(did) ?? 0;
 			const elapsedMs = Math.floor((timeUs - lastUs) / 1000);
-			if (verifiedDids.has(did) && !cached?.whitelisted && lastUs > 0 && elapsedMs >= 0 && elapsedMs < COOLDOWN_MS_INGEST) {
-				console.log(`[jetstream] rate-limited (${x},${y}) color=${c} did=${did} elapsed=${elapsedMs}ms`);
+			if (verifiedDids.has(did) && !whitelistedSet.has(did) && lastUs > 0 && elapsedMs >= 0 && elapsedMs < COOLDOWN_MS_INGEST) {
 				return;
 			}
-			console.log(`[jetstream] accepted (${x},${y}) color=${c} did=${did}${cached ? ` elapsed=${elapsedMs}ms` : ' first-seen'} time_us=${timeUs}`);
-			cooldownCache.set(did, { last_paint_at: timeUs, whitelisted: cached?.whitelisted ?? false, blocked: false });
-			recentPainters.add(did);
+			cooldownCache.set(did, timeUs);
+			verifiedDids.add(did);
 			pixelOwners.set(`${x},${y}`, did);
 			setPixel(x, y, c);
 
@@ -754,7 +722,7 @@
 		destroyHaptics();
 		jetstream?.disconnect();
 		resizeObs?.disconnect();
-		if (cooldownRefreshInterval) clearInterval(cooldownRefreshInterval);
+		if (listRefreshInterval) clearInterval(listRefreshInterval);
 		if (cooldownInterval) clearInterval(cooldownInterval);
 		if (rafId) cancelAnimationFrame(rafId);
 		if (typeof window !== 'undefined') {
