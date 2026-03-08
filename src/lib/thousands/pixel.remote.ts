@@ -19,25 +19,3 @@ export const getPixelInfo = command(
 		return row ? { did: row.did, painted_at: row.painted_at } : null;
 	}
 );
-
-export const getCooldownInfo = command(
-	v.object({
-		did: v.string()
-	}),
-	async (input) => {
-		const { platform } = getRequestEvent();
-		const db = platform?.env?.PLACE_DB;
-		if (!db) return { last_paint_at: 0, whitelisted: false, blocked: false };
-
-		const row = await db
-			.prepare('SELECT last_paint_at, whitelisted, blocked FROM user_stats WHERE did = ?')
-			.bind(input.did)
-			.first<{ last_paint_at: number; whitelisted: number; blocked: number }>();
-
-		return {
-			last_paint_at: row?.last_paint_at ?? 0,
-			whitelisted: row?.whitelisted === 1,
-			blocked: row?.blocked === 1
-		};
-	}
-);
