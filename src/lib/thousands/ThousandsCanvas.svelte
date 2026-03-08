@@ -22,9 +22,10 @@
 		canvas: Uint8Array | null;
 		cursor: number;
 		blocked: string[];
+		useBskyLikes: boolean;
 	}
 
-	let { canvas: initialCanvas, cursor: initialCursor, blocked: initialBlocked }: Props = $props();
+	let { canvas: initialCanvas, cursor: initialCursor, blocked: initialBlocked, useBskyLikes }: Props = $props();
 
 	// Block set — loaded at page load, refreshed every minute
 	let blockedSet = $state(new Set(initialBlocked));
@@ -136,6 +137,7 @@
 
 	function placePixel(x: number, y: number) {
 		if (placing) return;
+		if (useBskyLikes) return;
 		if (selectedColor === null) return;
 		if (!user.isLoggedIn) {
 			atProtoLoginModalState.show();
@@ -581,18 +583,24 @@
 		class="pointer-events-none absolute bottom-0 left-0 right-0 flex flex-col items-center gap-1.5 p-2 sm:gap-2 sm:p-3"
 		style="padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.5rem);"
 	>
-		<div
-			class="pointer-events-auto grid grid-cols-8 gap-1.5 rounded-xl bg-black/60 p-2 backdrop-blur-sm sm:grid-cols-16 sm:gap-2 sm:p-2.5"
-		>
-			{#each PALETTE as color, i (i)}
-				<button
-					class="size-6 sm:size-7 rounded-lg transition-transform hover:scale-105 cursor-pointer
-						{selectedColor === i ? 'scale-105' : ''}"
-					style="background-color:{color};{selectedColor === i ? `outline:2px solid ${color};outline-offset:1.5px` : ''}"
-					onclick={() => (selectedColor = selectedColor === i ? null : i)}
-					title={PALETTE_NAMES[i]}
-				></button>
-			{/each}
-		</div>
+		{#if useBskyLikes}
+			<div class="rounded-lg bg-black/60 px-3 py-1.5 text-xs text-white/70 backdrop-blur-sm">
+				canvas driven by bluesky likes
+			</div>
+		{:else}
+			<div
+				class="pointer-events-auto grid grid-cols-8 gap-1.5 rounded-xl bg-black/60 p-2 backdrop-blur-sm sm:grid-cols-16 sm:gap-2 sm:p-2.5"
+			>
+				{#each PALETTE as color, i (i)}
+					<button
+						class="size-6 sm:size-7 rounded-lg transition-transform hover:scale-105 cursor-pointer
+							{selectedColor === i ? 'scale-105' : ''}"
+						style="background-color:{color};{selectedColor === i ? `outline:2px solid ${color};outline-offset:1.5px` : ''}"
+						onclick={() => (selectedColor = selectedColor === i ? null : i)}
+						title={PALETTE_NAMES[i]}
+					></button>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>
