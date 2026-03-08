@@ -1,9 +1,8 @@
 #!/usr/bin/env npx tsx
 import type {} from '@atcute/atproto';
-import sharp from 'sharp';
 import { Client, CredentialManager } from '@atcute/client';
 import * as TID from '@atcute/tid';
-import * as colorDiff from 'color-diff';
+import QRCode from 'qrcode';
 
 // ── palette (matches src/lib/place/palette.ts) ──────────────────────────────
 const PALETTE_HEX = [
@@ -17,33 +16,22 @@ const PALETTE_HEX = [
 	'#FFA800', '#FF4500', '#BE0039', '#6D001A',
 ] as const;
 
-const PALETTE_RGB = PALETTE_HEX.map((hex) => {
-	const n = parseInt(hex.slice(1), 16);
-	return [(n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff] as [number, number, number];
-});
-
-const PALETTE_DIFF = PALETTE_RGB.map(([R, G, B], i) => ({ R, G, B, index: i }));
-
-function closestColor(r: number, g: number, b: number): number {
-	const match = colorDiff.closest({ R: r, G: g, B: b }, PALETTE_DIFF);
-	return (match as any).index as number;
-}
-
 // ── config ──────────────────────────────────────────────────────────────────
 interface Config {
 	handle: string;
 	appPassword: string;
-	imagePath: string;
+	text: string;
 	startX: number;
 	startY: number;
-	maxWidth: number;
-	maxHeight: number;
+	scale: number;
 	intervalSeconds: number;
-	/** skip white (palette 0) pixels — useful on a blank canvas */
+	darkColor: number;
+	lightColor: number;
+	/** skip white (palette 0) pixels */
 	skipWhite: boolean;
 	/** randomize pixel placement order */
 	shuffle: boolean;
-	/** just convert the image and write a preview file, don't paint */
+	/** just write a preview, don't paint */
 	dryRun: boolean;
 	/** skip the first N pixels before painting */
 	skip: number;
@@ -51,22 +39,23 @@ interface Config {
 
 function usage(): never {
 	console.log(`
-Usage: npx tsx scripts/thousands/paint.ts [options]
+Usage: npx tsx scripts/thousands/qr.ts [options]
 
 Required:
   --handle       Bluesky handle (e.g. alice.bsky.social)
   --password     App password
-  --image        Path to image file
+  --text         Text or URL to encode as QR code
 
 Optional:
   --x            Canvas X offset (default: 0)
   --y            Canvas Y offset (default: 0)
-  --max-width    Max image width after resize (default: 64)
-  --max-height   Max image height after resize (default: 64)
+  --scale        Pixels per QR cell (default: 1)
   --interval     Seconds between pixel placements (default: 10)
-  --skip-white   Skip white pixels (default: false)
+  --dark         Palette index for dark cells (default: 4 = black)
+  --light        Palette index for light cells (default: 0 = white)
+  --skip-white   Skip white/light pixels (default: false)
   --shuffle      Randomize pixel order (default: false)
-  --dry-run      Convert image and save preview, don't paint
+  --dry-run      Show preview info, don't paint
   --skip         Skip the first N pixels (default: 0)
   --help         Show this help
 `);
@@ -83,14 +72,13 @@ function parseArgs(): Config {
 
 	if (has('--help') || has('-h')) usage();
 
+	const text = get('--text');
 	const handle = get('--handle');
 	const appPassword = get('--password');
-	const imagePath = get('--image');
-
 	const dryRun = has('--dry-run');
 
-	if (!imagePath) {
-		console.error('Error: --image is required.\n');
+	if (!text) {
+		console.error('Error: --text is required.\n');
 		usage();
 	}
 
@@ -102,12 +90,13 @@ function parseArgs(): Config {
 	return {
 		handle: handle ?? '',
 		appPassword: appPassword ?? '',
-		imagePath,
+		text,
 		startX: parseInt(get('--x') ?? '0', 10),
 		startY: parseInt(get('--y') ?? '0', 10),
-		maxWidth: parseInt(get('--max-width') ?? '64', 10),
-		maxHeight: parseInt(get('--max-height') ?? '64', 10),
+		scale: parseInt(get('--scale') ?? '1', 10),
 		intervalSeconds: parseFloat(get('--interval') ?? '10'),
+		darkColor: parseInt(get('--dark') ?? '4', 10),
+		lightColor: parseInt(get('--light') ?? '0', 10),
 		skipWhite: has('--skip-white'),
 		shuffle: has('--shuffle'),
 		dryRun,
@@ -115,7 +104,7 @@ function parseArgs(): Config {
 	};
 }
 
-// ── helpers ─────────────────────────────────────────────────────────────────
+// ── helpers ──────────────────────────────────────────────────────────────────
 function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -134,89 +123,50 @@ interface Pixel {
 	color: number;
 }
 
-// ── image processing ────────────────────────────────────────────────────────
-async function loadResized(config: Config) {
-	const { data, info } = await sharp(config.imagePath)
-		.resize(config.maxWidth, config.maxHeight, { fit: 'inside' })
-		.ensureAlpha()
-		.raw()
-		.toBuffer({ resolveWithObject: true });
-	return { data, width: info.width, height: info.height, channels: info.channels };
-}
+// ── QR generation ────────────────────────────────────────────────────────────
+async function generatePixels(config: Config): Promise<{ pixels: Pixel[]; qrSize: number; canvasSize: number }> {
+	const qr = QRCode.create(config.text, { errorCorrectionLevel: 'M' });
+	const { data, size } = qr.modules;
 
-function extractPixels(
-	data: Buffer,
-	width: number,
-	height: number,
-	channels: number,
-	config: Config,
-): Pixel[] {
+	const canvasSize = size * config.scale;
 	const pixels: Pixel[] = [];
-	for (let y = 0; y < height; y++) {
-		for (let x = 0; x < width; x++) {
-			const i = (y * width + x) * channels;
-			const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
 
-			if (a < 128) continue;
+	for (let cy = 0; cy < size; cy++) {
+		for (let cx = 0; cx < size; cx++) {
+			const dark = data[cy * size + cx] !== 0;
+			const color = dark ? config.darkColor : config.lightColor;
 
-			const color = closestColor(r, g, b);
-			if (config.skipWhite && color === 0) continue;
+			if (!dark && config.skipWhite) continue;
 
-			const canvasX = config.startX + x;
-			const canvasY = config.startY + y;
-			if (canvasX < 0 || canvasX >= 1000 || canvasY < 0 || canvasY >= 1000) continue;
-
-			pixels.push({ x: canvasX, y: canvasY, color });
-		}
-	}
-	return pixels;
-}
-
-async function writePreview(
-	data: Buffer,
-	width: number,
-	height: number,
-	channels: number,
-	outputPath: string,
-) {
-	// rebuild an RGBA buffer with every pixel snapped to the palette
-	const out = Buffer.alloc(width * height * 4);
-	for (let y = 0; y < height; y++) {
-		for (let x = 0; x < width; x++) {
-			const si = (y * width + x) * channels;
-			const di = (y * width + x) * 4;
-			const a = data[si + 3];
-			if (a < 128) {
-				// transparent stays transparent
-				out[di] = 0; out[di + 1] = 0; out[di + 2] = 0; out[di + 3] = 0;
-				continue;
+			for (let dy = 0; dy < config.scale; dy++) {
+				for (let dx = 0; dx < config.scale; dx++) {
+					const canvasX = config.startX + cx * config.scale + dx;
+					const canvasY = config.startY + cy * config.scale + dy;
+					if (canvasX < 0 || canvasX >= 1000 || canvasY < 0 || canvasY >= 1000) continue;
+					pixels.push({ x: canvasX, y: canvasY, color });
+				}
 			}
-			const [r, g, b] = PALETTE_RGB[closestColor(data[si], data[si + 1], data[si + 2])];
-			out[di] = r; out[di + 1] = g; out[di + 2] = b; out[di + 3] = 255;
 		}
 	}
-	await sharp(out, { raw: { width, height, channels: 4 } }).png().toFile(outputPath);
-	console.log(`Preview saved to ${outputPath}`);
+
+	return { pixels, qrSize: size, canvasSize };
 }
 
-// ── main ────────────────────────────────────────────────────────────────────
+// ── main ─────────────────────────────────────────────────────────────────────
 async function main() {
 	const config = parseArgs();
 
-	// load & process image
-	console.log(`Loading image: ${config.imagePath}`);
-	const { data, width, height, channels } = await loadResized(config);
-	const pixels = extractPixels(data, width, height, channels, config);
-	console.log(`Image resized to ${width}×${height}, ${pixels.length} pixels to paint`);
+	console.log(`Generating QR code for: ${config.text}`);
+	const { pixels, qrSize, canvasSize } = await generatePixels(config);
+	console.log(`QR code: ${qrSize}×${qrSize} cells, ${canvasSize}×${canvasSize} pixels at scale ${config.scale}`);
+	console.log(`Total pixels: ${pixels.length}`);
 
 	if (config.dryRun) {
 		const pixelsAfterSkip = Math.max(0, pixels.length - config.skip);
 		const totalTime = pixelsAfterSkip * config.intervalSeconds;
 		const minutes = Math.floor(totalTime / 60);
 		const hours = Math.floor(minutes / 60);
-		const timeStr = hours > 0
-			? `${hours}h ${minutes % 60}m`
-			: `${minutes}m`;
+		const timeStr = hours > 0 ? `${hours}h ${minutes % 60}m` : `${minutes}m`;
 		console.log(`Estimated time: ${timeStr} (${pixelsAfterSkip} pixels × ${config.intervalSeconds}s interval)`);
 
 		// Rate-limit warnings (3 points per pixel create; 5000 pts/hr, 35000 pts/day)
@@ -236,10 +186,8 @@ async function main() {
 			console.warn(`⚠️  Rate limit warning: ${pixelsAfterSkip} pixels (${pixelsAfterSkip * PTS_PER_PIXEL} pts) exceeds the daily limit of ${DAILY_LIMIT} pts/day (${maxPixelsPerDay} pixels). Will take at least ${days} days to complete.`);
 		}
 
-		const ext = config.imagePath.lastIndexOf('.');
-		const outputPath =
-			(ext !== -1 ? config.imagePath.slice(0, ext) : config.imagePath) + '.preview.png';
-		await writePreview(data, width, height, channels, outputPath);
+		console.log(`Canvas region: (${config.startX}, ${config.startY}) to (${config.startX + canvasSize - 1}, ${config.startY + canvasSize - 1})`);
+		console.log(`Dark color: ${config.darkColor} (${PALETTE_HEX[config.darkColor]}), Light color: ${config.lightColor} (${PALETTE_HEX[config.lightColor]})`);
 		return;
 	}
 
@@ -300,7 +248,6 @@ async function main() {
 			console.error(`[${pixelNum}/${totalPixels}] Error:`, err);
 		}
 
-		// wait before next pixel (skip wait after last)
 		if (i < pixels.length - 1) {
 			await sleep(config.intervalSeconds * 1000);
 		}
