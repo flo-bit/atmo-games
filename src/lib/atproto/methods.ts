@@ -178,8 +178,8 @@ export async function putRecord({
 	if (!user.did) throw new Error('Not logged in');
 
 	const { putRecord: putRecordRemote } = await import('./server/repo.remote');
-	const data = await putRecordRemote({ collection, rkey, record });
-	return { ok: true, data };
+	const result = await putRecordRemote({ collection, rkey, record });
+	return result;
 }
 
 export async function deleteRecord({

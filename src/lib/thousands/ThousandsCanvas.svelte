@@ -40,6 +40,9 @@
 	let devMode = $state(false);
 
 	let listRefreshInterval: ReturnType<typeof setInterval>;
+	let spamInterval: ReturnType<typeof setInterval> | null = null;
+	let spamming = $state(false);
+	let spamRate = $state(5); // pixels per second
 
 	let isTouch = $state(false);
 
@@ -130,6 +133,33 @@
 	/* ------------------------------------------------------------------ */
 
 	let placing = false;
+	let rateLimitedUntil = $state(0);
+	let rateLimitShown = new Set<string>(); // which warning thresholds have been toasted this session
+
+	function checkRateLimit(rateLimit: { limit: number; remaining: number; reset: number } | null) {
+		if (!rateLimit) return;
+		const { limit, remaining, reset } = rateLimit;
+		const resetTime = new Date(reset * 1000).toLocaleTimeString();
+		console.log(`[rate limit] ${remaining}/${limit} points remaining, resets at ${resetTime}`);
+		const used = (limit - remaining) / limit;
+		// Each create costs 3 points; show pixels remaining
+		const pixelsLeft = Math.floor(remaining / 3);
+		const suffix = `(resets at ${resetTime})`;
+		if (used >= 0.9 && !rateLimitShown.has('90')) {
+			rateLimitShown.add('90');
+			toast.warning(`Rate limit: only ~${pixelsLeft} pixels left ${suffix}`);
+		} else if (used >= 0.8 && !rateLimitShown.has('80')) {
+			rateLimitShown.add('80');
+			toast.warning(`Rate limit: ~${pixelsLeft} pixels left ${suffix}`);
+		} else if (used >= 0.5 && !rateLimitShown.has('50')) {
+			rateLimitShown.add('50');
+			toast.warning(`Rate limit: ~${pixelsLeft} pixels left ${suffix}`);
+		} else if (used >= 0.2 && !rateLimitShown.has('20')) {
+			rateLimitShown.add('20');
+			toast.warning(`Rate limit: ~${pixelsLeft} pixels left ${suffix}`);
+		}
+		if (remaining === 0) rateLimitedUntil = reset;
+	}
 
 	function placePixel(x: number, y: number) {
 		if (placing) return;
@@ -141,6 +171,11 @@
 		}
 		if (!canPlace()) {
 			toast.error("You're blocked from placing pixels");
+			return;
+		}
+		if (rateLimitedUntil > 0 && Date.now() / 1000 < rateLimitedUntil) {
+			const mins = Math.ceil((rateLimitedUntil - Date.now() / 1000) / 60);
+			toast.error(`Rate limited — resets in ${mins} minute${mins === 1 ? '' : 's'}`);
 			return;
 		}
 		placing = true;
@@ -158,6 +193,16 @@
 			collection: 'games.atmo.thousands.pixel',
 			rkey,
 			record: { x, y, color: c }
+		}).then((result) => {
+			if (!result.ok && result.rateLimited) {
+				setPixel(x, y, prevColor);
+				rateLimitedUntil = result.resetAt;
+				localStorage.setItem('thousands:ratelimit', String(result.resetAt));
+				const mins = Math.ceil((result.resetAt - Date.now() / 1000) / 60);
+				toast.error(`Rate limited — resets in ${mins} minute${mins === 1 ? '' : 's'}`);
+			} else if (result.ok) {
+				checkRateLimit(result.rateLimit);
+			}
 		}).catch((e) => {
 			console.error('[place] putRecord failed', e);
 			setPixel(x, y, prevColor);
@@ -497,6 +542,7 @@
 		}
 		rebuildImage();
 		scheduleRender();
+		rateLimitedUntil = parseInt(localStorage.getItem('thousands:ratelimit') ?? '0', 10);
 		loaded = true;
 
 		// Refresh block list every minute
@@ -528,11 +574,36 @@
 		window.addEventListener('keydown', onKey);
 	});
 
+	function startSpam() {
+		if (spamInterval) clearInterval(spamInterval);
+		spamInterval = setInterval(() => {
+			const x = Math.floor(Math.random() * W);
+			const y = Math.floor(Math.random() * H);
+			const c = Math.floor(Math.random() * PALETTE.length);
+			const prevSelectedColor = selectedColor;
+			selectedColor = c;
+			placePixel(x, y);
+			selectedColor = prevSelectedColor;
+		}, 1000 / spamRate);
+	}
+
+	function toggleSpam() {
+		if (spamming) {
+			clearInterval(spamInterval!);
+			spamInterval = null;
+			spamming = false;
+		} else {
+			spamming = true;
+			startSpam();
+		}
+	}
+
 	onDestroy(() => {
 		destroyHaptics();
 		jetstream?.disconnect();
 		resizeObs?.disconnect();
 		if (listRefreshInterval) clearInterval(listRefreshInterval);
+		if (spamInterval) clearInterval(spamInterval);
 		if (rafId) cancelAnimationFrame(rafId);
 		if (typeof window !== 'undefined') {
 			window.removeEventListener('keydown', onKey);
@@ -578,6 +649,26 @@
 	>
 		&larr; back
 	</a>
+
+	{#if devMode}
+		<div class="absolute left-2 top-12 flex items-center gap-1.5 sm:left-4 sm:top-14">
+			<button
+				onclick={toggleSpam}
+				class="rounded-lg px-3 py-1.5 text-xs text-white backdrop-blur-sm transition-colors sm:text-sm {spamming ? 'bg-red-600/80 hover:bg-red-600' : 'bg-black/60 hover:bg-black/80'}"
+			>
+				{spamming ? 'stop spam' : 'spam pixels'}
+			</button>
+			<input
+				type="number"
+				min="1"
+				max="100"
+				bind:value={spamRate}
+				onchange={() => { if (spamming) startSpam(); }}
+				class="w-16 rounded-lg bg-black/60 px-2 py-1.5 text-xs text-white backdrop-blur-sm sm:text-sm"
+			/>
+			<span class="text-xs text-white/70">/s</span>
+		</div>
+	{/if}
 
 	<!-- Bottom chrome -->
 	<div
