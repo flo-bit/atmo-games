@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 
-	import { Toaster } from '@foxui/core';
+	import { ThemeToggle, Toaster } from '@foxui/core';
 	import { AtprotoLoginModal } from '@foxui/social';
 	import { login, signup } from '$lib/atproto';
 
@@ -22,3 +22,5 @@
 		return true;
 	}}
 />
+
+<ThemeToggle />

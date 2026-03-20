@@ -4,7 +4,7 @@
 	import { JetstreamClient, pixelRecordMapper, makeLikeRecordMapper } from './jetstream';
 	import { user, putRecord, createTID } from '$lib/atproto';
 	import { atProtoLoginModalState } from '@foxui/social';
-	import { toast } from '@foxui/core';
+	import { toast, Modal, Button } from '@foxui/core';
 	import { createWebHaptics } from 'web-haptics/svelte';
 	import { resolve } from '$app/paths';
 	import { SvelteSet } from 'svelte/reactivity';
@@ -46,6 +46,28 @@
 	let spamRate = $state(5); // pixels per second
 
 	let isTouch = $state(false);
+
+	// Share modal
+	let shareOpen = $state(false);
+	let shareMode = $state<'copy' | 'bluesky' | null>(null);
+
+	$effect(() => {
+		if (!shareOpen) shareMode = null;
+	});
+
+	function buildShareUrl(includeView: boolean): string {
+		const base = window.location.origin + window.location.pathname;
+		if (!includeView) return base;
+		const cx = Math.round((containerEl.clientWidth / 2 - ox) / scale);
+		const cy = Math.round((containerEl.clientHeight / 2 - oy) / scale);
+		return `${base}#x=${cx},y=${cy},zoom=${Math.round(scale * 100) / 100}`;
+	}
+
+	function share(includeView: boolean) {
+		navigator.clipboard.writeText(buildShareUrl(includeView));
+		toast.success('Link copied!');
+		shareOpen = false;
+	}
 
 	// DOM
 	let containerEl: HTMLDivElement;
@@ -219,13 +241,25 @@
 	function saveView() {
 		if (saveViewTimer) clearTimeout(saveViewTimer);
 		saveViewTimer = setTimeout(() => {
-			try { localStorage.setItem('millions:view', JSON.stringify({ ox, oy, scale })); } catch {
+			try {
+				const cx = (containerEl.clientWidth / 2 - ox) / scale;
+				const cy = (containerEl.clientHeight / 2 - oy) / scale;
+				localStorage.setItem('millions:view', JSON.stringify({ x: cx, y: cy, zoom: scale }));
+			} catch {
 				console.error('Failed to save view state');
 			}
 		}, 200);
 	}
 
+	function clampView() {
+		const hw = containerEl.clientWidth / 2;
+		const hh = containerEl.clientHeight / 2;
+		ox = Math.min(hw, Math.max(hw - W * scale, ox));
+		oy = Math.min(hh, Math.max(hh - H * scale, oy));
+	}
+
 	function scheduleRender() {
+		clampView();
 		if (!rafId) rafId = requestAnimationFrame(render);
 		saveView();
 	}
@@ -522,19 +556,30 @@
 
 		onResize();
 
-		// Restore camera position from localStorage, or center if none saved
-		try {
-			const saved = localStorage.getItem('millions:view');
-			if (saved) {
-				const v = JSON.parse(saved);
-				scale = v.scale ?? 1;
-				ox = v.ox ?? 0;
-				oy = v.oy ?? 0;
-			} else {
+		// Restore camera from hash, localStorage, or center
+		const hash = window.location.hash;
+		const hashMatch = hash.match(/^#x=(-?[\d.]+),y=(-?[\d.]+),zoom=([\d.]+)$/);
+		if (hashMatch) {
+			const px = parseFloat(hashMatch[1]);
+			const py = parseFloat(hashMatch[2]);
+			scale = parseFloat(hashMatch[3]);
+			ox = containerEl.clientWidth / 2 - px * scale;
+			oy = containerEl.clientHeight / 2 - py * scale;
+			history.replaceState(null, '', window.location.pathname + window.location.search);
+		} else {
+			try {
+				const saved = localStorage.getItem('millions:view');
+				if (saved) {
+					const v = JSON.parse(saved);
+					scale = v.zoom ?? 1;
+					ox = containerEl.clientWidth / 2 - (v.x ?? W / 2) * scale;
+					oy = containerEl.clientHeight / 2 - (v.y ?? H / 2) * scale;
+				} else {
+					centerCanvas();
+				}
+			} catch {
 				centerCanvas();
 			}
-		} catch {
-			centerCanvas();
 		}
 
 		// Initialize from server-provided canvas data
@@ -651,18 +696,28 @@
 		&larr; back
 	</a>
 
-	<!-- Download button -->
-	<button
-		onclick={() => {
-			const a = document.createElement('a');
-			a.href = offCanvas.toDataURL('image/png');
-			a.download = '1000s.png';
-			a.click();
-		}}
-		class="absolute right-2 top-2 rounded-lg bg-black/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80 sm:right-4 sm:top-4 sm:text-sm"
-	>
-		&#8595; download
-	</button>
+	<!-- Share + Download -->
+	<div class="absolute right-2 top-2 flex flex-col gap-1.5 sm:right-4 sm:top-4">
+		<button
+			onclick={() => (shareOpen = true)}
+			class="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-black/60 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/80 sm:px-3 sm:py-1.5"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v13"/><path d="m16 6-4-4-4 4"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>
+			<span class="hidden text-sm sm:inline">share</span>
+		</button>
+		<button
+			onclick={() => {
+				const a = document.createElement('a');
+				a.href = offCanvas.toDataURL('image/png');
+				a.download = '1000s.png';
+				a.click();
+			}}
+			class="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-black/60 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/80 sm:px-3 sm:py-1.5"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
+			<span class="hidden text-sm sm:inline">download</span>
+		</button>
+	</div>
 
 	{#if devMode}
 		<div class="absolute left-2 top-12 flex items-center gap-1.5 sm:left-4 sm:top-14">
@@ -710,3 +765,23 @@
 		{/if}
 	</div>
 </div>
+
+<Modal bind:open={shareOpen}>
+	<div class="flex flex-col gap-3 p-2">
+		{#if shareMode === null}
+			<h3 class="text-lg font-semibold text-base-900 dark:text-base-100">Share</h3>
+			<div class="flex flex-col gap-2">
+				<Button variant="secondary" onclick={() => (shareMode = 'copy')}>Copy Link</Button>
+				<Button variant="secondary" onclick={() => (shareMode = 'bluesky')}>Share to Bluesky</Button>
+			</div>
+		{:else}
+			<h3 class="text-lg font-semibold text-base-900 dark:text-base-100">
+				{shareMode === 'copy' ? 'Copy Link' : 'Share to Bluesky'}
+			</h3>
+			<div class="flex flex-col gap-2">
+				<Button variant="secondary" onclick={() => share(true)}>Current View</Button>
+				<Button variant="secondary" onclick={() => share(false)}>Full Canvas</Button>
+			</div>
+		{/if}
+	</div>
+</Modal>
