@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { dev } from '$app/environment';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
 	import { FoursGame, DIFFICULTY_COLORS } from './game.svelte';
@@ -81,61 +80,46 @@
 		</div>
 	{/if}
 
-	<div class="flex items-center justify-center gap-1 text-xs text-base-600 dark:text-base-400">
-		<span>Mistakes remaining:</span>
-		<div class="flex gap-0.5">
-			{#each Array(4) as _, i (i)}
-				<span
-					class="inline-block size-2.5 rounded-full {i < 4 - game.mistakes
-						? 'bg-base-700 dark:bg-base-300'
-						: 'bg-base-300 dark:bg-base-600'}"
-				></span>
-			{/each}
-		</div>
+	<div class="flex items-center justify-center gap-1 text-base">
+		{#each Array(4) as _, i (i)}
+			<span class="{i < 4 - game.mistakes ? 'opacity-100' : 'opacity-25'} text-accent-500">&hearts;</span>
+		{/each}
 	</div>
 
-	<div class="flex items-center justify-center gap-2">
+	<div class="flex items-center justify-center gap-3">
 		{#if game.gameState === 'playing'}
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-3 py-1 text-xs font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
 				onclick={() => game.shuffleRemaining()}
 				disabled={game.isSubmitting}
 			>
 				Shuffle
 			</button>
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-3 py-1 text-xs font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				onclick={() => game.showHint()}
+				disabled={game.isSubmitting}
+			>
+				Hint
+			</button>
+			<button
+				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
 				onclick={() => game.deselectAll()}
 				disabled={game.selectedWords.length === 0 || game.isSubmitting}
 			>
 				Deselect All
 			</button>
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-3 py-1 text-xs font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
 				onclick={() => game.submitGuess()}
 				disabled={game.selectedWords.length !== 4 || game.isSubmitting}
 			>
 				Submit
 			</button>
-			<button
-				class="cursor-pointer rounded-full border border-base-400 px-3 py-1 text-xs font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
-				onclick={() => game.showHint()}
-				disabled={game.isSubmitting}
-			>
-				Hint
-			</button>
 		{:else}
-			<span class="text-xs text-base-500 dark:text-base-400">
+			<span class="text-sm text-base-500 dark:text-base-400">
 				Next puzzle in {game.countdown}
 			</span>
-		{/if}
-		{#if dev}
-			<button
-				class="cursor-pointer rounded-full border border-red-400 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 dark:border-red-500 dark:text-red-400 dark:hover:bg-red-900/30"
-				onclick={() => game.reset()}
-			>
-				Reset
-			</button>
 		{/if}
 	</div>
 </div>

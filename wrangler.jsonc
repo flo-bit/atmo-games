@@ -15,6 +15,6 @@
 	"kv_namespaces": [
 		{ "binding": "OAUTH_SESSIONS", "id": "2cbd49677f7c40cc8659586681a31d6e" },
 		{ "binding": "OAUTH_STATES", "id": "dcaeea11d9ba4562ab891b4409c3abb0" },
-		{ "binding": "PLACE_KV", "id": "674d6600a117415dbed27cab871b8375", "remote": true }
+		{ "binding": "PLACE_KV", "id": "674d6600a117415dbed27cab871b8375", "remote": false }
 	]
 }

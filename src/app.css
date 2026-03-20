@@ -59,4 +59,10 @@
 		--base-900: var(--color-stone-900);
 		--base-950: var(--color-stone-950);
 	}
+
+	.dark {
+		--base-800: #1a1a1a;
+		--base-900: #111111;
+		--base-950: #0a0a0a;
+	}
 }

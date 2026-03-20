@@ -266,7 +266,7 @@ export class FoursGame {
 		if (this.selectedWords.includes(word)) {
 			return 'bg-base-600 text-white dark:bg-base-300 dark:text-base-900';
 		}
-		return 'bg-base-200 text-base-900 dark:bg-base-700 dark:text-base-100';
+		return 'bg-base-200 text-base-900 dark:bg-base-800 dark:text-base-100';
 	}
 
 	tileStyle(word: string): string {

@@ -23,4 +23,6 @@
 	}}
 />
 
-<ThemeToggle />
+<div class="fixed top-3 left-3 z-50">
+	<ThemeToggle />
+</div>
