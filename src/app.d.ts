@@ -23,7 +23,7 @@ declare global {
 				OAUTH_PUBLIC_URL: string;
 				PROFILE_CACHE?: KVNamespace;
 				PLACE_KV?: KVNamespace;
-				PLACE_DB?: D1Database;
+			USE_BSKY_LIKES?: string;
 			};
 		}
 	}
