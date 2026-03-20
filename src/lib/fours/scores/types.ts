@@ -1,6 +1,6 @@
 export type FoursScoreRecord = {
 	puzzle: { uri: string };
-	guesses: [string, string, string, string][];
+	guesses: { words: [string, string, string, string] }[];
 	state: 'won' | 'lost';
 };
 

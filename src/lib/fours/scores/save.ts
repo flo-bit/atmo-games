@@ -10,7 +10,7 @@ export async function saveScore(puzzleUri: string, score: FoursScore): Promise<v
 	const record: FoursScoreRecord = JSON.parse(
 		JSON.stringify({
 			puzzle: { uri: puzzleUri },
-			guesses: score.guesses,
+			guesses: score.guesses.map((words) => ({ words })),
 			state: score.won ? 'won' : 'lost'
 		})
 	);

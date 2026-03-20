@@ -1,7 +1,7 @@
 import { putRecord, createTID, getRecord, user } from '$lib/atproto';
 import type { FoursPuzzle } from './types';
 
-export async function submitPuzzle(puzzle: FoursPuzzle): Promise<string> {
+export async function submitPuzzle(puzzle: FoursPuzzle, options?: { allowDaily?: boolean }): Promise<string> {
 	if (!user.did) throw new Error('Not logged in');
 
 	const rkey = createTID();
@@ -10,7 +10,7 @@ export async function submitPuzzle(puzzle: FoursPuzzle): Promise<string> {
 	await putRecord({
 		collection: 'games.atmo.fours.puzzle',
 		rkey,
-		record: puzzle
+		record: { ...puzzle, createdAt: new Date().toISOString(), allowDaily: options?.allowDaily ?? false }
 	});
 
 	// 2. Add to puzzle list

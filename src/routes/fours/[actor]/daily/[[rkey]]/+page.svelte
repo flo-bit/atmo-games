@@ -12,23 +12,19 @@
 	let puzzle = $derived(page.data.puzzle as FoursPuzzle);
 	let shuffledWords = $derived(page.data.shuffledWords as string[]);
 	let puzzleUri = $derived(page.data.puzzleUri as string);
-	let puzzleIndex = $derived(page.data.puzzleIndex as number | undefined);
-	let puzzleCount = $derived(page.data.puzzleCount as number | undefined);
+	let puzzleIndex = $derived(page.data.puzzleIndex as number);
+	let puzzleCount = $derived(page.data.puzzleCount as number);
 
-	// Server-provided score (for signed-in users)
 	let serverScore = $derived(page.data.score as FoursScore | null);
-
-	// Client-side score from IndexedDB (for anonymous users)
 	let localScore: FoursScore | undefined = $state(undefined);
-
 	let existingScore = $derived(serverScore ?? localScore ?? undefined);
 
 	onMount(async () => {
 		if (!serverScore) {
 			try {
 				const entry = await getScoreLocal(puzzleUri);
-				if (entry) localScore = { guesses: entry.record.guesses, won: entry.record.state === 'won' };
-			} catch {}
+				if (entry) localScore = { guesses: entry.record.guesses.map((g) => g.words), won: entry.record.state === 'won' };
+			} catch { /* ignored */ }
 		}
 	});
 
@@ -43,11 +39,7 @@
 			Fours by <Avatar src={avatar} alt={handle} class="size-8" /> {handle}
 		</h1>
 		<span class="mt-1 text-xs text-base-400 dark:text-base-500">
-			{#if puzzleIndex != null && puzzleCount != null}
-				puzzle {puzzleIndex}/{puzzleCount}
-			{:else}
-				{puzzleUri}
-			{/if}
+			puzzle {puzzleIndex}/{puzzleCount} &middot; {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
 		</span>
 	</div>
 

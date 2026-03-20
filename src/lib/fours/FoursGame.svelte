@@ -86,7 +86,7 @@
 		{/each}
 	</div>
 
-	<div class="flex items-center justify-center gap-3">
+	<div class="flex flex-wrap items-center justify-center gap-2">
 		{#if game.gameState === 'playing'}
 			<button
 				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
