@@ -1,5 +1,5 @@
 import type { Did } from '@atcute/lexicons';
-import { getDetailedProfile, describeRepo } from '../methods';
+import { rpc, ok, avatarUrl } from '$lib/fours/contrail';
 
 const PROFILE_CACHE_TTL = 60 * 60; // 1 hour
 
@@ -26,17 +26,20 @@ export async function loadProfile(did: Did, profileCache?: KVNamespace) {
 
 async function fetchProfile(did: Did) {
 	try {
-		let profile = await getDetailedProfile({ did });
+		const data = await ok(rpc.get('games.atmo.getProfile', {
+			params: { actor: did }
+		}));
 
-		if (!profile || profile.handle === 'handle.invalid') {
-			const repo = await describeRepo({ did });
-			profile = {
-				did,
-				handle: repo?.handle || 'handle.invalid'
-			} as typeof profile;
+		let avatar: string | undefined;
+		if (data.record?.avatar) {
+			avatar = avatarUrl(data.did, data.record.avatar as { ref: { $link: string } });
 		}
 
-		return profile;
+		return {
+			did: data.did,
+			handle: data.handle ?? 'handle.invalid',
+			avatar
+		};
 	} catch (e) {
 		console.error('Failed to load profile:', e);
 		return undefined;

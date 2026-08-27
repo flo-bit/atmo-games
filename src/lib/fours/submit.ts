@@ -1,5 +1,6 @@
 import { putRecord, createTID, getRecord, user } from '$lib/atproto';
 import type { FoursPuzzle } from './types';
+import { notifyOfUpdate } from './contrail';
 
 export async function submitPuzzle(puzzle: FoursPuzzle, options?: { allowDaily?: boolean }): Promise<string> {
 	if (!user.did) throw new Error('Not logged in');
@@ -13,8 +14,10 @@ export async function submitPuzzle(puzzle: FoursPuzzle, options?: { allowDaily?:
 		record: { ...puzzle, createdAt: new Date().toISOString(), allowDaily: options?.allowDaily ?? false }
 	});
 
-	// 2. Add to puzzle list
 	const uri = `at://${user.did}/games.atmo.fours.puzzle/${rkey}`;
+	notifyOfUpdate(uri);
+
+	// 2. Add to puzzle list
 
 	let puzzles: string[] = [];
 	try {
@@ -35,6 +38,7 @@ export async function submitPuzzle(puzzle: FoursPuzzle, options?: { allowDaily?:
 		rkey: 'self',
 		record: { puzzles: [...puzzles, uri] }
 	});
+	notifyOfUpdate(`at://${user.did}/games.atmo.fours.puzzleList/self`);
 
 	return rkey;
 }

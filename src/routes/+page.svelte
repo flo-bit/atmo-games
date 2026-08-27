@@ -7,7 +7,7 @@
 <div class="flex min-h-svh flex-col items-center justify-center p-4">
 	<h1 class="mb-12 text-4xl font-bold text-base-900 dark:text-base-100">atmo games</h1>
 
-	<div class="mb-16 grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-3">
+	<div class="mb-16 grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 		<a
 			href="/fours/"
 			class="game-card flex flex-col justify-between rounded-3xl bg-[#00c8ff] p-8 text-white"
@@ -50,6 +50,36 @@
 				</div>
 				<p class="min-h-[3rem] text-base font-semibold leading-snug text-white">
 					Guess the five-letter word in six tries.
+				</p>
+			</div>
+			<div class="mt-8">
+				<span class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all">
+					Play now
+				</span>
+			</div>
+		</a>
+
+		<a
+			href="/nines/"
+			class="game-card flex flex-col justify-between rounded-3xl bg-[#f97316] p-8 text-white"
+		>
+			<div>
+				<div class="mb-6 flex items-center gap-3">
+					<svg class="h-12 w-12" viewBox="0 0 36 36" fill="none">
+						<rect x="0" y="0" width="10" height="10" rx="2" fill="white" opacity="0.9" />
+						<rect x="13" y="0" width="10" height="10" rx="2" fill="white" opacity="0.6" />
+						<rect x="26" y="0" width="10" height="10" rx="2" fill="white" opacity="0.9" />
+						<rect x="0" y="13" width="10" height="10" rx="2" fill="white" opacity="0.6" />
+						<rect x="13" y="13" width="10" height="10" rx="2" fill="white" opacity="0.9" />
+						<rect x="26" y="13" width="10" height="10" rx="2" fill="white" opacity="0.6" />
+						<rect x="0" y="26" width="10" height="10" rx="2" fill="white" opacity="0.9" />
+						<rect x="13" y="26" width="10" height="10" rx="2" fill="white" opacity="0.6" />
+						<rect x="26" y="26" width="10" height="10" rx="2" fill="white" opacity="0.9" />
+					</svg>
+					<span class="text-3xl font-black tracking-tight">Nines</span>
+				</div>
+				<p class="min-h-[3rem] text-base font-semibold leading-snug text-white">
+					Fill every row, column, and box with 1–9.
 				</p>
 			</div>
 			<div class="mt-8">

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import { Avatar } from '@foxui/core';
-	import FoursGame from '$lib/fours/FoursGame.svelte';
-	import type { FoursPuzzle, FoursScore } from '$lib/fours/types';
-	import { getScoreLocal } from '$lib/fours/scores/idb';
-	import { saveScore } from '$lib/fours/scores/save';
+	import type { Snippet } from 'svelte';
+	import FoursGame from './FoursGame.svelte';
+	import type { FoursPuzzle, FoursScore } from './types';
+	import { getScoreLocal } from './scores/idb';
+	import { saveScore } from './scores/save';
 
-	let handle = $derived(page.data.handle as string);
-	let avatar = $derived(page.data.avatar as string | undefined);
+	let { header }: { header: Snippet } = $props();
+
 	let puzzle = $derived(page.data.puzzle as FoursPuzzle);
 	let shuffledWords = $derived(page.data.shuffledWords as string[]);
 	let puzzleUri = $derived(page.data.puzzleUri as string);
@@ -21,7 +21,7 @@
 		if (!serverScore) {
 			try {
 				const entry = await getScoreLocal(puzzleUri);
-				if (entry) localScore = { guesses: entry.record.guesses.map((g) => g.words), won: entry.record.state === 'won' };
+				if (entry) localScore = { guesses: entry.record.guesses.map((g) => g.words), won: entry.record.state === 'games.atmo.fours.score#won' };
 			} catch { /* ignored */ }
 		}
 	});
@@ -33,9 +33,7 @@
 
 <div class="flex min-h-svh flex-col items-center justify-center p-4">
 	<div class="mb-4 flex flex-col items-center">
-		<h1 class="flex items-center gap-2 text-2xl font-bold text-base-800 dark:text-base-200">
-			Fours by <Avatar src={avatar} alt={handle} class="size-8" /> {handle}
-		</h1>
+		{@render header()}
 	</div>
 
 	<div class="w-full max-w-lg">

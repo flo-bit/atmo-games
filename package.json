@@ -22,6 +22,7 @@
 		"@atcute/bluesky": "^3.2.19",
 		"@atcute/client": "^4.2.1",
 		"@atcute/identity-resolver": "^1.2.2",
+		"@atcute/lex-cli": "^2.5.3",
 		"@atcute/lexicons": "^1.2.9",
 		"@atcute/oauth-node-client": "^1.1.0",
 		"@atcute/tid": "^1.1.2",
