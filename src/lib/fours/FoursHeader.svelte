@@ -20,7 +20,7 @@
 	);
 </script>
 
-<h1 class="text-base-800 dark:text-base-200 text-center text-2xl font-bold">
+<h1 class="text-base-800 dark:text-base-200 text-left text-2xl font-bold">
 	Find four groups of four
 </h1>
 <div class="text-base-400 dark:text-base-500 mt-1 flex items-center gap-1.5 text-xs">

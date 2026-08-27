@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Button } from '@foxui/core';
 	import NinesGame from '$lib/nines/NinesGame.svelte';
 	import { generatePuzzle } from '$lib/nines/generator';
 	import type { Difficulty } from '$lib/nines/types';
@@ -16,19 +15,14 @@
 </script>
 
 <div class="flex min-h-svh flex-col items-center px-4 py-8">
-	<div class="mb-4 flex flex-col items-center gap-2">
-		<a
-			href="/"
-			class="text-base-400 hover:text-base-600 dark:text-base-500 dark:hover:text-base-300 text-sm"
-			>&larr; atmo games</a
-		>
+	<div class="mb-4 flex w-full max-w-[520px] flex-col items-start gap-2">
 		<h1 class="text-base-800 dark:text-base-200 text-2xl font-bold">Nines</h1>
 		<p class="text-base-500 dark:text-base-400 text-sm">
 			Fill every row, column, and box with 1-9.
 		</p>
 	</div>
 
-	<div class="mb-4 flex flex-wrap justify-center gap-2">
+	<div class="mb-4 flex w-full max-w-[520px] flex-wrap justify-start gap-2">
 		{#each ['easy', 'medium', 'hard', 'expert'] as diff (diff)}
 			<button
 				class="cursor-pointer rounded-full px-4 py-1.5 text-xs font-bold tracking-wider uppercase transition-colors
@@ -42,7 +36,7 @@
 		{/each}
 	</div>
 
-	<div class="w-full max-w-lg">
+	<div class="w-full max-w-[520px]">
 		{#key gameKey}
 			<NinesGame
 				{puzzle}
@@ -51,9 +45,5 @@
 				}}
 			/>
 		{/key}
-	</div>
-
-	<div class="mt-4">
-		<Button variant="secondary" onclick={() => newGame()}>New Puzzle</Button>
 	</div>
 </div>

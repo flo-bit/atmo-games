@@ -38,7 +38,7 @@
 </script>
 
 <div class="flex min-h-svh flex-col items-center justify-center p-4">
-	<div class="mb-4 flex flex-col items-center">
+	<div class="mb-4 flex w-full max-w-lg flex-col items-start px-2">
 		{@render header()}
 	</div>
 

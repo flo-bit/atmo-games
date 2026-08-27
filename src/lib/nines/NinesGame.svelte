@@ -55,8 +55,8 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<div class="flex w-full flex-col items-center gap-4 px-2 py-4 sm:px-4">
-	<div class="flex w-full max-w-md items-center justify-between px-1">
+<div class="flex w-full flex-col items-center gap-4 py-4">
+	<div class="flex w-full max-w-[520px] items-center justify-between px-1">
 		<div class="flex items-center gap-3">
 			<span
 				class="bg-base-200 text-base-600 dark:bg-base-800 dark:text-base-400 rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase"
@@ -78,79 +78,132 @@
 		</div>
 	</div>
 
-	<!-- Sudoku Grid -->
-	<div class="sudoku-grid aspect-square w-full max-w-md" role="grid">
-		{#each Array(9) as _, row (row)}
-			{#each Array(9) as _, col (col)}
-				{@const value = game.grid[row][col]}
-				{@const cellNotes = game.notes[row][col]}
-				{@const isInitial = game.isInitialCell(row, col)}
-				<button
-					class="sudoku-cell border-base-300 dark:border-base-600 flex items-center justify-center
+	<div
+		class="flex w-full max-w-[520px] flex-col items-center gap-4 md:flex-row md:items-center md:gap-6"
+	>
+		<!-- Sudoku Grid -->
+		<div class="sudoku-grid aspect-square w-full max-w-md md:flex-1" role="grid">
+			{#each Array(9) as _, row (row)}
+				{#each Array(9) as _, col (col)}
+					{@const value = game.grid[row][col]}
+					{@const cellNotes = game.notes[row][col]}
+					{@const isInitial = game.isInitialCell(row, col)}
+					<button
+						class="sudoku-cell border-base-300 dark:border-base-600 flex items-center justify-center
 						{game.cellClasses(row, col)}
 						{isInitial ? 'font-extrabold' : 'font-semibold'}
 						{col % 3 === 0 && col !== 0 ? 'border-l-base-500 dark:border-l-base-400 border-l-2' : 'border-l'}
 						{row % 3 === 0 && row !== 0 ? 'border-t-base-500 dark:border-t-base-400 border-t-2' : 'border-t'}
 						{col === 8 ? '' : ''}
 						{row === 8 ? '' : ''}"
-					style="grid-row: {row + 1}; grid-column: {col + 1};"
-					onclick={() => game.selectCell(row, col)}
-					aria-label="Row {row + 1}, Column {col + 1}{value ? `, value ${value}` : ', empty'}"
-				>
-					{#if value !== 0}
-						<span class="text-lg sm:text-2xl">{value}</span>
-					{:else if cellNotes.size > 0}
-						<div class="notes-grid">
-							{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as n (n)}
-								<span
-									class="text-[8px] leading-none sm:text-[10px] {cellNotes.has(n)
-										? 'text-base-500 dark:text-base-400'
-										: 'text-transparent'}">{n}</span
-								>
-							{/each}
-						</div>
-					{/if}
-				</button>
-			{/each}
-		{/each}
-	</div>
-
-	{#if game.gameState === 'playing'}
-		<!-- Number pad -->
-		<div class="grid w-full max-w-md grid-cols-9 gap-1">
-			{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as num (num)}
-				<button
-					class="bg-base-200 text-base-800 hover:bg-base-300 active:bg-base-400 dark:bg-base-800 dark:text-base-200 dark:hover:bg-base-700 dark:active:bg-base-600 flex aspect-square cursor-pointer items-center justify-center rounded-lg text-lg font-bold transition-colors sm:text-xl"
-					onclick={() => game.enterNumber(num)}
-				>
-					{num}
-				</button>
+						style="grid-row: {row + 1}; grid-column: {col + 1};"
+						onclick={() => game.selectCell(row, col)}
+						aria-label="Row {row + 1}, Column {col + 1}{value ? `, value ${value}` : ', empty'}"
+					>
+						{#if value !== 0}
+							<span class="text-lg sm:text-2xl">{value}</span>
+						{:else if cellNotes.size > 0}
+							<div class="notes-grid">
+								{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as n (n)}
+									<span
+										class="text-[8px] leading-none sm:text-[10px] {cellNotes.has(n)
+											? 'text-base-500 dark:text-base-400'
+											: 'text-transparent'}">{n}</span
+									>
+								{/each}
+							</div>
+						{/if}
+					</button>
+				{/each}
 			{/each}
 		</div>
 
+		{#if game.gameState === 'playing'}
+			<!-- Number pad -->
+			<div
+				class="grid w-full max-w-md grid-cols-9 gap-1 md:w-12 md:shrink-0 md:grid-cols-1 md:gap-0.5"
+			>
+				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as num (num)}
+					<button
+						class="bg-base-200 text-base-800 hover:bg-base-300 active:bg-base-400 dark:bg-base-800 dark:text-base-200 dark:hover:bg-base-700 dark:active:bg-base-600 flex aspect-square cursor-pointer items-center justify-center rounded-lg text-lg font-bold transition-colors sm:text-xl"
+						onclick={() => game.enterNumber(num)}
+					>
+						{num}
+					</button>
+				{/each}
+			</div>
+		{/if}
+	</div>
+
+	{#if game.gameState === 'playing'}
 		<!-- Controls -->
 		<div class="flex flex-wrap items-center justify-center gap-2">
 			<button
-				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
+				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 flex size-10 cursor-pointer items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
 				onclick={() => game.undo()}
 				disabled={game.gameState !== 'playing'}
+				aria-label="Undo"
+				title="Undo"
 			>
-				Undo
+				<svg
+					class="size-5"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.75"
+					aria-hidden="true"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" />
+					<path stroke-linecap="round" d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+				</svg>
 			</button>
 			<button
-				class="cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold transition-colors
+				class="flex size-10 cursor-pointer items-center justify-center rounded-full border transition-colors
 					{game.noteMode
 					? 'border-blue-500 bg-blue-100 text-blue-700 dark:border-blue-400 dark:bg-blue-900 dark:text-blue-300'
 					: 'border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700'}"
 				onclick={() => game.toggleNoteMode()}
+				aria-label="Notes {game.noteMode ? 'on' : 'off'}"
+				aria-pressed={game.noteMode}
+				title="Notes {game.noteMode ? 'on' : 'off'}"
 			>
-				Notes {game.noteMode ? 'ON' : 'OFF'}
+				<svg
+					class="size-5"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.75"
+					aria-hidden="true"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.862 4.487Z"
+					/>
+					<path stroke-linecap="round" d="M19.5 7.125 16.862 4.487" />
+				</svg>
 			</button>
 			<button
-				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
+				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 flex size-10 cursor-pointer items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
 				onclick={() => game.erase()}
+				aria-label="Erase"
+				title="Erase"
 			>
-				Erase
+				<svg
+					class="size-5"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.75"
+					aria-hidden="true"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="m7.5 20.25-4.19-4.19a2.25 2.25 0 0 1 0-3.18l8.94-8.94a2.25 2.25 0 0 1 3.18 0l4.63 4.63a2.25 2.25 0 0 1 0 3.18l-8.5 8.5H7.5Z"
+					/>
+					<path stroke-linecap="round" d="m8.25 7.94 7.81 7.81M11.56 20.25H21" />
+				</svg>
 			</button>
 		</div>
 	{:else if game.gameState === 'won'}
@@ -178,8 +231,10 @@
 		overflow: hidden;
 	}
 
-	:global(.dark) .sudoku-grid {
-		border-color: var(--color-base-400);
+	@media (prefers-color-scheme: dark) {
+		.sudoku-grid {
+			border-color: var(--color-base-400);
+		}
 	}
 
 	.sudoku-cell {

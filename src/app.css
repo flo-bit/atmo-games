@@ -6,8 +6,6 @@
 
 @source '../node_modules/@foxui';
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
 	--color-base-50: var(--base-50);
 	--color-base-100: var(--base-100);
@@ -36,6 +34,8 @@
 
 @layer base {
 	:root {
+		color-scheme: light dark;
+
 		--accent-50: var(--color-rose-50);
 		--accent-100: var(--color-rose-100);
 		--accent-200: var(--color-rose-200);
@@ -59,11 +59,5 @@
 		--base-800: var(--color-stone-800);
 		--base-900: var(--color-stone-900);
 		--base-950: var(--color-stone-950);
-	}
-
-	.dark {
-		--base-800: #1a1a1a;
-		--base-900: #111111;
-		--base-950: #0a0a0a;
 	}
 }
