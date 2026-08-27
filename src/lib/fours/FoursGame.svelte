@@ -31,10 +31,6 @@
 </script>
 
 <div class="relative flex w-full flex-col gap-4 px-2 py-4 sm:px-4">
-	<p class="text-base-700 dark:text-base-300 text-center text-sm font-semibold">
-		Find four groups of four!
-	</p>
-
 	<div class="board grid grid-cols-4 gap-2">
 		{#each game.solvedGroups as group (group.category)}
 			<div
@@ -101,13 +97,6 @@
 				disabled={game.isSubmitting}
 			>
 				Hint
-			</button>
-			<button
-				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
-				onclick={() => game.deselectAll()}
-				disabled={game.selectedWords.length === 0 || game.isSubmitting}
-			>
-				Deselect All
 			</button>
 			<button
 				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"

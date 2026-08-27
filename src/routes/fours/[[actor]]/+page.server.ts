@@ -89,15 +89,12 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 		isMainDaily,
 		isToday,
 		todayRkey: isToday ? null : todayRkey,
-		feedHandle: handle,
-		feedAvatar: avatar,
 		handle: puzzleAuthor.handle,
 		avatar: puzzleAuthor.avatar,
+		date: isToday ? new Date().toISOString() : puzzleData.value.createdAt,
 		puzzleUri,
 		puzzle,
 		shuffledWords: shuffleWords(puzzle),
-		puzzleIndex: todayIndex + 1,
-		puzzleCount,
 		score
 	};
 };

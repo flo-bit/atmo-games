@@ -2,7 +2,8 @@
 	import { page } from '$app/state';
 	import { fly } from 'svelte/transition';
 	import { cubicIn } from 'svelte/easing';
-	import { Avatar, Button } from '@foxui/core';
+	import { Button } from '@foxui/core';
+	import FoursHeader from '$lib/fours/FoursHeader.svelte';
 	import FoursPlayPage from '$lib/fours/FoursPlayPage.svelte';
 
 	let showOverlay = $state(true);
@@ -10,12 +11,9 @@
 	let isMainDaily = $derived(page.data.isMainDaily as boolean);
 	let isToday = $derived(page.data.isToday as boolean);
 	let todayRkey = $derived(page.data.todayRkey as string | null);
+	let date = $derived(page.data.date as string);
 	let handle = $derived(page.data.handle as string);
 	let avatar = $derived(page.data.avatar as string | undefined);
-	let feedHandle = $derived(page.data.feedHandle as string);
-	let feedAvatar = $derived(page.data.feedAvatar as string | undefined);
-	let puzzleIndex = $derived(page.data.puzzleIndex as number);
-	let puzzleCount = $derived(page.data.puzzleCount as number);
 </script>
 
 {#if showOverlay && isMainDaily && isToday}
@@ -43,33 +41,6 @@
 
 <FoursPlayPage>
 	{#snippet header()}
-		{#if isMainDaily}
-			<h1 class="text-base-800 dark:text-base-200 text-2xl font-bold">Fours</h1>
-			<span class="text-base-400 dark:text-base-500 mt-1 text-xs">
-				{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-			</span>
-			<span class="text-base-400 dark:text-base-500 mt-1 flex items-center gap-1 text-xs">
-				by <Avatar src={avatar} alt={handle} class="size-4" />
-				{handle}
-			</span>
-		{:else}
-			<h1 class="text-base-800 dark:text-base-200 flex items-center gap-2 text-2xl font-bold">
-				Fours by <Avatar src={feedAvatar} alt={feedHandle} class="size-8" />
-				{feedHandle}
-			</h1>
-			<span class="text-base-400 dark:text-base-500 mt-1 text-xs">
-				puzzle {puzzleIndex}/{puzzleCount} &middot; {new Date().toLocaleDateString('en-US', {
-					month: 'long',
-					day: 'numeric',
-					year: 'numeric'
-				})}
-			</span>
-			{#if handle !== feedHandle}
-				<span class="text-base-400 dark:text-base-500 mt-1 flex items-center gap-1 text-xs">
-					puzzle by <Avatar src={avatar} alt={handle} class="size-4" />
-					{handle}
-				</span>
-			{/if}
-		{/if}
+		<FoursHeader {date} {handle} {avatar} />
 	{/snippet}
 </FoursPlayPage>

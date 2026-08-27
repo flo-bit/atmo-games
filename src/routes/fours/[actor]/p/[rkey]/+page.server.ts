@@ -38,6 +38,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	return {
 		handle,
 		avatar: authorAvatar,
+		date: puzzleData.value.createdAt,
 		puzzleUri,
 		puzzle,
 		shuffledWords: shuffleWords(puzzle),

@@ -237,11 +237,6 @@ export class FoursGame {
 		this.shuffledWords = [...solved, ...shuffle(unsolved)];
 	}
 
-	deselectAll() {
-		this.selectedWords = [];
-		this.feedback = null;
-	}
-
 	showHint() {
 		if (this.gameState !== 'playing' || this.isSubmitting) return;
 		this.selectedWords = [];

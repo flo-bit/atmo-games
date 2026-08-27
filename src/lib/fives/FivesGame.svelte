@@ -156,7 +156,7 @@
 	}
 </script>
 
-<div class="flex flex-col items-center gap-4 py-4">
+<div class="flex w-full max-w-[500px] flex-1 flex-col items-center gap-2">
 	<!-- Feedback toast -->
 	{#if game.feedback}
 		<div
@@ -172,13 +172,13 @@
 	{/if}
 
 	<!-- Grid -->
-	<div class="grid w-full max-w-[350px] gap-[5px]" style="grid-template-rows: repeat(6, 1fr);">
+	<div class="grid w-full max-w-[400px] gap-[5px]" style="grid-template-rows: repeat(6, 1fr);">
 		{#each Array(MAX_GUESSES) as _, rowIndex (rowIndex)}
 			{@const isSubmitted = rowIndex < game.guessResults.length}
 			{@const isCurrent = rowIndex === game.guessResults.length && game.gameState === 'playing'}
 			{@const isRevealing = game.revealRow === rowIndex}
 			{@const isShaking = game.shakeRow === rowIndex}
-			<div class="flex justify-center gap-[5px] {isShaking ? 'shake' : ''}">
+			<div class="flex w-full justify-center gap-[5px] {isShaking ? 'shake' : ''}">
 				{#each Array(WORD_LENGTH) as _, colIndex (colIndex)}
 					{@const submittedResult = isSubmitted ? game.guessResults[rowIndex] : null}
 					{@const letter = isSubmitted
@@ -189,12 +189,12 @@
 					{@const result = submittedResult?.results[colIndex] ?? null}
 					{@const showColor = isSubmitted && (!isRevealing || revealedCols[colIndex])}
 					<div
-						class="flex h-[62px] w-[62px] items-center justify-center rounded-lg text-2xl font-bold uppercase
+						class="flex aspect-square min-w-0 flex-1 items-center justify-center rounded-lg border-2 text-2xl font-bold uppercase
 							{showColor && result
 							? tileColorClass(result)
 							: letter
-								? 'bg-base-200 dark:bg-base-700'
-								: 'bg-base-100 dark:bg-base-800'}
+								? 'border-base-400 bg-base-200 dark:border-base-600 dark:bg-base-700'
+								: 'border-base-300 bg-base-50 dark:border-base-700 dark:bg-base-800'}
 							{isRevealing ? 'flip-tile' : ''}"
 						style={isRevealing ? `animation-delay: ${colIndex * 0.3}s;` : ''}
 					>
@@ -207,17 +207,17 @@
 
 	<!-- Keyboard -->
 	{#if !showEndScreen}
-		<div class="flex w-full max-w-[500px] flex-col items-center gap-[6px] px-1">
+		<div class="mt-auto flex w-full max-w-[500px] flex-col items-center gap-[6px]">
 			{#each KEYBOARD_ROWS as row, rowIdx (rowIdx)}
-				<div class="flex w-full justify-center gap-[6px]">
+				<div class="flex w-full justify-center gap-[3px] sm:gap-[6px]">
 					{#each row as key (key)}
 						<button
-							class="flex h-[58px] cursor-pointer items-center justify-center rounded-md font-bold
+							class="flex h-[58px] min-w-0 cursor-pointer items-center justify-center rounded-md font-bold
 								{key === 'ENTER'
-								? 'bg-base-800 text-base-100 dark:bg-base-200 dark:text-base-800 min-w-[100px] px-3 text-base'
+								? 'bg-base-800 text-base-100 dark:bg-base-200 dark:text-base-800 flex-[2] px-1 text-sm sm:px-3 sm:text-base'
 								: key === '⌫'
-									? 'min-w-[50px] px-2 text-lg ' + keyColorClass(key)
-									: 'min-w-[44px] text-lg ' + keyColorClass(key)}"
+									? 'flex-1 px-1 text-lg ' + keyColorClass(key)
+									: 'flex-1 text-base sm:text-lg ' + keyColorClass(key)}"
 							onclick={() => {
 								if (key === 'ENTER') {
 									game.submitGuess();

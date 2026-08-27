@@ -1,8 +1,3 @@
-<script lang="ts">
-	import { user, logout } from '$lib/atproto';
-	import { loginDialog } from '$lib/login.svelte';
-</script>
-
 <div class="flex min-h-svh flex-col items-center justify-center p-4">
 	<h1 class="text-base-900 dark:text-base-100 mb-12 text-4xl font-bold">atmo games</h1>
 
@@ -94,24 +89,6 @@
 			</div>
 		</a>
 	</div>
-</div>
-
-<div class="fixed bottom-4 left-4 z-50">
-	{#if user.isLoggedIn}
-		<button
-			onclick={() => logout()}
-			class="bg-base-200 text-base-700 hover:bg-base-300 rounded-full px-6 py-2 text-sm font-bold transition-all dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
-		>
-			Sign Out
-		</button>
-	{:else}
-		<button
-			onclick={() => loginDialog.show()}
-			class="bg-base-200 text-base-700 hover:bg-base-300 rounded-full px-6 py-2 text-sm font-bold transition-all dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
-		>
-			Sign In
-		</button>
-	{/if}
 </div>
 
 <style>

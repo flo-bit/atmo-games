@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Button } from '@foxui/core';
 	import FivesGame from '$lib/fives/FivesGame.svelte';
 	import { fetchAnswers, fetchValidWords } from '$lib/fives/daily';
 	import type { FivesScore } from '$lib/fives/types';
@@ -27,8 +28,8 @@
 </script>
 
 <div class="text-base-900 dark:text-base-100 flex min-h-svh flex-col items-center p-4">
-	<div class="mt-12 mb-8 text-center">
-		<h1 class="text-4xl font-bold">Fives</h1>
+	<div class="w-full max-w-[500px] md:hidden">
+		<Button href="/" variant="ghost" size="sm">&larr; Back</Button>
 	</div>
 
 	{#if answer && validWords}
