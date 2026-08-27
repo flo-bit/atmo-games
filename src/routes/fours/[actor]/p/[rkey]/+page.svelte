@@ -9,8 +9,9 @@
 
 <FoursPlayPage>
 	{#snippet header()}
-		<h1 class="flex items-center gap-2 text-2xl font-bold text-base-800 dark:text-base-200">
-			Fours by <Avatar src={avatar} alt={handle} class="size-8" /> {handle}
+		<h1 class="text-base-800 dark:text-base-200 flex items-center gap-2 text-2xl font-bold">
+			Fours by <Avatar src={avatar} alt={handle} class="size-8" />
+			{handle}
 		</h1>
 	{/snippet}
 </FoursPlayPage>

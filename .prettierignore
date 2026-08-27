@@ -2,3 +2,17 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Generated Contrail/Atcute artifacts
+/contrail.lock.json
+/lex.config.js
+/src/lib/contrail/
+/api/lex.config.js
+/api/lexicons/
+/api/src/lexicon-types/
+/api/.contrail/
+
+# Local settings and static data
+/.claude/
+/static/fives/
+/static/fours/puzzles/

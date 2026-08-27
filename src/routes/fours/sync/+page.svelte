@@ -87,23 +87,25 @@
 	{#if loading}
 		<p class="text-base-500 dark:text-base-400">Checking local scores...</p>
 	{:else if unsyncedScores.length > 0}
-		<div class="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl bg-base-100 p-8 dark:bg-base-800">
-			<h1 class="text-xl font-bold text-base-800 dark:text-base-200">Sync Scores</h1>
+		<div
+			class="bg-base-100 dark:bg-base-800 flex w-full max-w-md flex-col items-center gap-6 rounded-2xl p-8"
+		>
+			<h1 class="text-base-800 dark:text-base-200 text-xl font-bold">Sync Scores</h1>
 
-			<p class="text-center text-base-700 dark:text-base-300">
+			<p class="text-base-700 dark:text-base-300 text-center">
 				You have {unsyncedScores.length} score{unsyncedScores.length === 1 ? '' : 's'} saved locally.
 				Save {unsyncedScores.length === 1 ? 'it' : 'them'} to your account?
 			</p>
 
 			{#if syncing}
 				<div class="w-full">
-					<div class="mb-2 h-2 w-full overflow-hidden rounded-full bg-base-300 dark:bg-base-600">
+					<div class="bg-base-300 dark:bg-base-600 mb-2 h-2 w-full overflow-hidden rounded-full">
 						<div
-							class="h-full rounded-full bg-base-700 transition-all dark:bg-base-300"
+							class="bg-base-700 dark:bg-base-300 h-full rounded-full transition-all"
 							style="width: {(syncProgress / unsyncedScores.length) * 100}%"
 						></div>
 					</div>
-					<p class="text-center text-sm text-base-500 dark:text-base-400">
+					<p class="text-base-500 dark:text-base-400 text-center text-sm">
 						Syncing {syncProgress}/{unsyncedScores.length}...
 					</p>
 				</div>

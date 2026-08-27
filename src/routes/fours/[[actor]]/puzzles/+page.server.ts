@@ -9,16 +9,18 @@ export const load: PageServerLoad = async ({ params }) => {
 	const actor = params.actor || DEFAULT_HANDLE;
 	const { did, handle, avatar } = await resolveActor(actor);
 
-	const data = await ok(rpc.get('games.atmo.fours.puzzle.listRecords', {
-		params: { actor: toActor(did), limit: 200, order: 'asc' }
-	}));
+	const data = await ok(
+		rpc.get('games.atmo.puzzle.listRecords', {
+			params: { actor: toActor(did), limit: 200, order: 'asc' }
+		})
+	);
 
 	if (!data.records.length) {
 		error(404, 'No puzzles found for this user');
 	}
 
 	const puzzles = data.records.map((r) => {
-		const puzzle = r.record as unknown as FoursPuzzle & { createdAt?: string };
+		const puzzle = r.value as unknown as FoursPuzzle & { createdAt?: string };
 		return {
 			rkey: r.rkey,
 			did: r.did,

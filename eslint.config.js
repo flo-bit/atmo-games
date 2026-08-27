@@ -1,34 +1,49 @@
 import prettier from 'eslint-config-prettier';
+import path from 'node:path';
 import js from '@eslint/js';
-import { includeIgnoreFile } from '@eslint/compat';
 import svelte from 'eslint-plugin-svelte';
+import { defineConfig, globalIgnores, includeIgnoreFile } from 'eslint/config';
 import globals from 'globals';
-import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
-const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
-export default ts.config(
+const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
+
+export default defineConfig(
 	includeIgnoreFile(gitignorePath),
+	globalIgnores([
+		'contrail.lock.json',
+		'lex.config.js',
+		'src/lib/contrail/**',
+		'api/lex.config.js',
+		'api/lexicons/**',
+		'api/src/lexicon-types/**'
+	]),
 	js.configs.recommended,
-	...ts.configs.recommended,
-	...svelte.configs['flat/recommended'],
+	ts.configs.recommended,
+	svelte.configs.recommended,
 	prettier,
-	...svelte.configs['flat/prettier'],
+	svelte.configs.prettier,
 	{
+		languageOptions: { globals: { ...globals.browser, ...globals.node } },
+		rules: {
+			'no-undef': 'off',
+			'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+		}
+	},
+	{
+		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 		languageOptions: {
-			globals: {
-				...globals.browser,
-				...globals.node
+			parserOptions: {
+				projectService: true,
+				extraFileExtensions: ['.svelte'],
+				parser: ts.parser
 			}
 		}
 	},
 	{
-		files: ['**/*.svelte'],
-
-		languageOptions: {
-			parserOptions: {
-				parser: ts.parser
-			}
+		rules: {
+			'svelte/no-navigation-without-resolve': 'off',
+			'svelte/prefer-svelte-reactivity': 'off'
 		}
 	}
 );

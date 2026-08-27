@@ -88,8 +88,7 @@ export class FoursGame {
 		for (const guess of score.guesses) {
 			const matchedGroup = this.puzzle.groups.find(
 				(group) =>
-					!solvedGroups.includes(group) &&
-					guess.every((w) => group.words.includes(w as never))
+					!solvedGroups.includes(group) && guess.every((w) => group.words.includes(w as never))
 			);
 			if (matchedGroup) {
 				solvedGroups.push(matchedGroup);
@@ -171,9 +170,7 @@ export class FoursGame {
 			const solvedWordSet = new Set(this.solvedGroups.flatMap((g) => g.words) as string[]);
 			const matchedSet = new Set(matched);
 			const solvedPart = this.shuffledWords.filter((w) => solvedWordSet.has(w));
-			const others = this.shuffledWords.filter(
-				(w) => !solvedWordSet.has(w) && !matchedSet.has(w)
-			);
+			const others = this.shuffledWords.filter((w) => !solvedWordSet.has(w) && !matchedSet.has(w));
 			this.shuffledWords = [...solvedPart, ...matched, ...others];
 
 			await delay(500);

@@ -136,7 +136,11 @@ export class FivesGame {
 
 		if (guess === this.answer) {
 			this.gameState = 'won';
-			this.showFeedback(['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'][this.guessResults.length - 1]);
+			this.showFeedback(
+				['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'][
+					this.guessResults.length - 1
+				]
+			);
 		} else if (this.guessResults.length >= MAX_GUESSES) {
 			this.gameState = 'lost';
 			this.showFeedback(this.answer);

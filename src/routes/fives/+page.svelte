@@ -21,12 +21,12 @@
 		gameOver = false;
 	}
 
-	function handleGameEnd(score: FivesScore) {
+	function handleGameEnd(_score: FivesScore) {
 		gameOver = true;
 	}
 </script>
 
-<div class="flex min-h-svh flex-col items-center p-4 text-base-900 dark:text-base-100">
+<div class="text-base-900 dark:text-base-100 flex min-h-svh flex-col items-center p-4">
 	<div class="mt-12 mb-8 text-center">
 		<h1 class="text-4xl font-bold">Fives</h1>
 	</div>
@@ -36,14 +36,14 @@
 			<FivesGame {answer} {validWords} onGameEnd={handleGameEnd} />
 		{/key}
 	{:else}
-		<p class="mt-12 text-base-500 dark:text-base-400">Loading...</p>
+		<p class="text-base-500 dark:text-base-400 mt-12">Loading...</p>
 	{/if}
 </div>
 
 {#if gameOver}
 	<button
 		onclick={nextGame}
-		class="fixed bottom-4 right-4 z-50 rounded-full bg-base-200 px-6 py-2 text-sm font-bold text-base-700 transition-colors hover:bg-base-300 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
+		class="bg-base-200 text-base-700 hover:bg-base-300 fixed right-4 bottom-4 z-50 rounded-full px-6 py-2 text-sm font-bold transition-colors dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
 	>
 		Next
 	</button>

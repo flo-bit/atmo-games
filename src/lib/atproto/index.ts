@@ -1,19 +1,11 @@
 export { user, login, signup, logout } from './auth.svelte';
+export { createTID, getRecord } from '@svelte-atproto/oauth/helper';
 
-export {
-	parseUri,
-	resolveHandle,
-	getPDS,
-	getDetailedProfile,
-	getClient,
-	listRecords,
-	getRecord,
-	putRecord,
-	deleteRecord,
-	uploadBlob,
-	describeRepo,
-	getBlobURL,
-	getCDNImageBlobUrl,
-	searchActorsTypeahead,
-	createTID
-} from './methods';
+export async function putRecord(input: {
+	collection: 'games.atmo.fours.puzzle' | 'games.atmo.fours.score' | 'games.atmo.fours.puzzleList';
+	rkey?: string;
+	record: Record<string, unknown>;
+}) {
+	const { putRecord: putRecordRemote } = await import('./repo.remote');
+	return putRecordRemote(input);
+}

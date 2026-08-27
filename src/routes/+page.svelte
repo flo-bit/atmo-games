@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { atProtoLoginModalState } from '@foxui/social';
 	import { user, logout } from '$lib/atproto';
-
+	import { loginDialog } from '$lib/login.svelte';
 </script>
 
 <div class="flex min-h-svh flex-col items-center justify-center p-4">
-	<h1 class="mb-12 text-4xl font-bold text-base-900 dark:text-base-100">atmo games</h1>
+	<h1 class="text-base-900 dark:text-base-100 mb-12 text-4xl font-bold">atmo games</h1>
 
-	<div class="mb-16 grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+	<div class="mb-16 grid w-full max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
 		<a
 			href="/fours/"
 			class="game-card flex flex-col justify-between rounded-3xl bg-[#00c8ff] p-8 text-white"
@@ -22,12 +21,14 @@
 					</svg>
 					<span class="text-3xl font-black tracking-tight">Fours</span>
 				</div>
-				<p class="min-h-[3rem] text-base font-semibold leading-snug text-white">
+				<p class="min-h-[3rem] text-base leading-snug font-semibold text-white">
 					Find four groups of four.
 				</p>
 			</div>
 			<div class="mt-8">
-				<span class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all">
+				<span
+					class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all"
+				>
 					Play now
 				</span>
 			</div>
@@ -48,12 +49,14 @@
 					</svg>
 					<span class="text-3xl font-black tracking-tight">Fives</span>
 				</div>
-				<p class="min-h-[3rem] text-base font-semibold leading-snug text-white">
+				<p class="min-h-[3rem] text-base leading-snug font-semibold text-white">
 					Guess the five-letter word in six tries.
 				</p>
 			</div>
 			<div class="mt-8">
-				<span class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all">
+				<span
+					class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all"
+				>
 					Play now
 				</span>
 			</div>
@@ -78,62 +81,33 @@
 					</svg>
 					<span class="text-3xl font-black tracking-tight">Nines</span>
 				</div>
-				<p class="min-h-[3rem] text-base font-semibold leading-snug text-white">
+				<p class="min-h-[3rem] text-base leading-snug font-semibold text-white">
 					Fill every row, column, and box with 1–9.
 				</p>
 			</div>
 			<div class="mt-8">
-				<span class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all">
-					Play now
-				</span>
-			</div>
-		</a>
-
-		<a
-			href="/millions/"
-			class="game-card flex flex-col justify-between rounded-3xl bg-[#ff2d55] p-8 text-white"
-		>
-			<div>
-				<div class="mb-6 flex items-center gap-3">
-					<svg class="h-12 w-12" viewBox="0 0 34 34" fill="none">
-						<rect x="0" y="0" width="10" height="10" rx="2" fill="#FFFFFF" />
-						<rect x="12" y="0" width="10" height="10" rx="2" fill="#898D90" />
-						<rect x="24" y="0" width="10" height="10" rx="2" fill="#FF99AA" />
-						<rect x="0" y="12" width="10" height="10" rx="2" fill="#B44AC0" />
-						<rect x="12" y="12" width="10" height="10" rx="2" fill="#6A5CFF" />
-						<rect x="24" y="12" width="10" height="10" rx="2" fill="#3690EA" />
-						<rect x="0" y="24" width="10" height="10" rx="2" fill="#009EAA" />
-						<rect x="12" y="24" width="10" height="10" rx="2" fill="#7EED56" />
-						<rect x="24" y="24" width="10" height="10" rx="2" fill="#FFD635" />
-					</svg>
-					<span class="text-3xl font-black tracking-tight">Millions</span>
-				</div>
-				<p class="min-h-[3rem] text-base font-semibold leading-snug text-white">
-					A collaborative pixel canvas. Place colors and create art together.
-				</p>
-			</div>
-			<div class="mt-8">
-				<span class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all">
+				<span
+					class="play-btn inline-block rounded-full bg-white/20 px-6 py-2 text-sm font-bold text-white transition-all"
+				>
 					Play now
 				</span>
 			</div>
 		</a>
 	</div>
-
-	</div>
+</div>
 
 <div class="fixed bottom-4 left-4 z-50">
 	{#if user.isLoggedIn}
 		<button
 			onclick={() => logout()}
-			class="rounded-full bg-base-200 px-6 py-2 text-sm font-bold text-base-700 transition-all hover:bg-base-300 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
+			class="bg-base-200 text-base-700 hover:bg-base-300 rounded-full px-6 py-2 text-sm font-bold transition-all dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
 		>
 			Sign Out
 		</button>
 	{:else}
 		<button
-			onclick={() => atProtoLoginModalState.show()}
-			class="rounded-full bg-base-200 px-6 py-2 text-sm font-bold text-base-700 transition-all hover:bg-base-300 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
+			onclick={() => loginDialog.show()}
+			class="bg-base-200 text-base-700 hover:bg-base-300 rounded-full px-6 py-2 text-sm font-bold transition-all dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
 		>
 			Sign In
 		</button>

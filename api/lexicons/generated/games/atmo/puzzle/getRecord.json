@@ -1,0 +1,166 @@
+{
+  "lexicon": 1,
+  "id": "games.atmo.puzzle.getRecord",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a games.atmo.fours.puzzle record by AT URI",
+      "parameters": {
+        "type": "params",
+        "required": [
+          "uri"
+        ],
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the record"
+          },
+          "profiles": {
+            "type": "boolean",
+            "description": "Include indexed profile and identity information"
+          },
+          "hydrateScores": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of scores records to embed"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": [
+            "uri",
+            "value",
+            "did",
+            "collection",
+            "rkey",
+            "time_us"
+          ],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "cid": {
+              "type": "string",
+              "format": "cid"
+            },
+            "value": {
+              "type": "ref",
+              "ref": "games.atmo.fours.puzzle#main"
+            },
+            "did": {
+              "type": "string",
+              "format": "did"
+            },
+            "collection": {
+              "type": "string",
+              "format": "nsid"
+            },
+            "rkey": {
+              "type": "string"
+            },
+            "time_us": {
+              "type": "integer"
+            },
+            "scoresCount": {
+              "type": "integer",
+              "description": "Total scores count"
+            },
+            "scores": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "#hydrateScoresRecord"
+              }
+            },
+            "profiles": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "#profileEntry"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hydrateScoresRecord": {
+      "type": "object",
+      "required": [
+        "uri",
+        "value",
+        "did",
+        "collection",
+        "rkey",
+        "time_us"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "value": {
+          "type": "ref",
+          "ref": "games.atmo.fours.score#main"
+        },
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid"
+        },
+        "rkey": {
+          "type": "string"
+        },
+        "time_us": {
+          "type": "integer"
+        }
+      }
+    },
+    "profileEntry": {
+      "type": "object",
+      "required": [
+        "did"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "handle": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "value": {
+          "type": "ref",
+          "ref": "app.bsky.actor.profile#main"
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid"
+        },
+        "rkey": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

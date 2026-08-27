@@ -34,7 +34,7 @@ export async function fetchValidWords(): Promise<Set<string>> {
 export async function getTodayAnswer(): Promise<string> {
 	const answers = await fetchAnswers();
 	const num = getTodayPuzzleNumber();
-	const index = ((num - 1) % answers.length);
+	const index = (num - 1) % answers.length;
 	return answers[index];
 }
 

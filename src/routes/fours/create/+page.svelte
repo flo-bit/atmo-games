@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { Button, Checkbox, Label } from '@foxui/core';
-	import { atProtoLoginModalState } from '@foxui/social';
 	import { user } from '$lib/atproto';
+	import { loginDialog } from '$lib/login.svelte';
 	import type { FoursPuzzle } from '$lib/fours/types';
 	import { submitPuzzle } from '$lib/fours/submit';
 
@@ -31,7 +31,8 @@
 	let successRkey = $state('');
 
 	let allFilled = $derived(
-		categories.every((c) => c.trim() !== '') && words.every((row) => row.every((w) => w.trim() !== ''))
+		categories.every((c) => c.trim() !== '') &&
+			words.every((row) => row.every((w) => w.trim() !== ''))
 	);
 
 	onMount(() => {
@@ -42,7 +43,9 @@
 				if (data.categories) categories = data.categories;
 				if (data.words) words = data.words;
 			}
-		} catch { /* ignored */ }
+		} catch {
+			/* ignored */
+		}
 	});
 
 	function saveDraft() {
@@ -82,7 +85,6 @@
 			}
 		}
 		const allWords = words.flat().map((w) => w.trim().toUpperCase());
-		// eslint-disable-next-line svelte/require-svelte-set -- not reactive, just local validation
 		const seen = new Set<string>();
 		for (const w of allWords) {
 			if (seen.has(w)) {
@@ -128,40 +130,40 @@
 </script>
 
 <div class="flex min-h-svh flex-col items-center justify-center p-4">
-	<h1 class="mb-6 text-2xl font-bold text-base-800 dark:text-base-200">Create Puzzle</h1>
+	<h1 class="text-base-800 dark:text-base-200 mb-6 text-2xl font-bold">Create Puzzle</h1>
 
 	{#if !user.isLoggedIn}
-		<div class="flex flex-col items-center gap-6 rounded-2xl bg-base-100 p-8 dark:bg-base-800">
-			<p class="text-lg font-medium text-base-700 dark:text-base-300">
+		<div class="bg-base-100 dark:bg-base-800 flex flex-col items-center gap-6 rounded-2xl p-8">
+			<p class="text-base-700 dark:text-base-300 text-lg font-medium">
 				Sign in with your Bluesky account to create puzzles
 			</p>
-			<Button onclick={() => atProtoLoginModalState.show()}>Sign In</Button>
+			<Button onclick={() => loginDialog.show()}>Sign In</Button>
 		</div>
 	{:else}
 		<div class="board w-full max-w-lg">
 			<div class="grid grid-cols-4 gap-2">
 				{#each [0, 1, 2, 3] as i (i)}
 					<div
-						class="col-span-4 flex aspect-8/1 items-center justify-center rounded-lg {groupColors[i]}"
+						class="col-span-4 flex aspect-8/1 items-center justify-center rounded-lg {groupColors[
+							i
+						]}"
 					>
 						<input
 							type="text"
 							placeholder="{groupLabels[i]} category"
 							bind:value={categories[i]}
 							disabled={submitting}
-							class="w-full bg-transparent text-center text-base font-extrabold text-base-900 placeholder-base-900/40 outline-none border-none ring-0 dark:text-base-100 dark:placeholder-base-100/40 sm:text-2xl"
+							class="text-base-900 placeholder-base-900/40 dark:text-base-100 dark:placeholder-base-100/40 w-full border-none bg-transparent text-center text-base font-extrabold ring-0 outline-none sm:text-2xl"
 						/>
 					</div>
 					{#each [0, 1, 2, 3] as j (j)}
-						<div
-							class="flex aspect-2/1 items-center justify-center rounded-lg {groupColors[i]}"
-						>
+						<div class="flex aspect-2/1 items-center justify-center rounded-lg {groupColors[i]}">
 							<input
 								type="text"
 								placeholder="Word {j + 1}"
 								bind:value={words[i][j]}
 								disabled={submitting}
-								class="w-full bg-transparent text-center text-sm font-extrabold uppercase text-base-900 placeholder-base-900/40 outline-none border-none ring-0 dark:text-base-100 dark:placeholder-base-100/40 sm:text-lg"
+								class="text-base-900 placeholder-base-900/40 dark:text-base-100 dark:placeholder-base-100/40 w-full border-none bg-transparent text-center text-sm font-extrabold uppercase ring-0 outline-none sm:text-lg"
 							/>
 						</div>
 					{/each}
@@ -176,9 +178,7 @@
 				<div
 					class="mt-4 rounded-md border border-green-300 bg-green-50 p-4 text-center dark:border-green-700 dark:bg-green-900/30"
 				>
-					<p class="text-sm font-medium text-green-800 dark:text-green-300">
-						Puzzle created!
-					</p>
+					<p class="text-sm font-medium text-green-800 dark:text-green-300">Puzzle created!</p>
 					<a
 						href="/fours/{user.did}/p/{successRkey}"
 						class="mt-1 inline-block text-sm text-green-700 underline hover:text-green-900 dark:text-green-400 dark:hover:text-green-200"
@@ -189,8 +189,18 @@
 			{/if}
 
 			<div class="mt-4 flex items-center justify-center gap-2">
-				<Checkbox id="allow-daily" bind:checked={allowDaily} disabled={submitting} aria-labelledby="allow-daily-label" />
-				<Label id="allow-daily-label" for="allow-daily" class="text-sm text-base-600 dark:text-base-400">Allow my puzzle to be used as a daily puzzle</Label>
+				<Checkbox
+					id="allow-daily"
+					bind:checked={allowDaily}
+					disabled={submitting}
+					aria-labelledby="allow-daily-label"
+				/>
+				<Label
+					id="allow-daily-label"
+					for="allow-daily"
+					class="text-base-600 dark:text-base-400 text-sm"
+					>Allow my puzzle to be used as a daily puzzle</Label
+				>
 			</div>
 
 			<div class="mt-4 flex items-center justify-center gap-3">
@@ -211,5 +221,4 @@
 	.board {
 		container-type: inline-size;
 	}
-
 </style>

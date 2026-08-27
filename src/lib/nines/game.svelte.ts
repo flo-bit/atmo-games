@@ -46,9 +46,16 @@ export class NinesGame {
 		this.initial = puzzle.initial.map((r) => [...r]);
 		this.solution = puzzle.solution;
 		this.grid = puzzle.initial.map((r) => [...r]);
-		this.notes = Array.from({ length: 9 }, () =>
-			Array.from({ length: 9 }, () => new Set<number>())
-		);
+		const notes: Set<number>[][] = [];
+		for (let row = 0; row < 9; row++) {
+			const rowNotes: Set<number>[] = [];
+			for (let col = 0; col < 9; col++) {
+				const cellNotes = new Set<number>();
+				rowNotes.push(cellNotes);
+			}
+			notes.push(rowNotes);
+		}
+		this.notes = notes;
 		this.startTimer();
 	}
 
@@ -193,10 +200,7 @@ export class NinesGame {
 
 		// Re-evaluate errors
 		const newErrors = new Set(this.errorCells);
-		if (
-			entry.prevValue !== 0 &&
-			entry.prevValue !== this.solution[entry.row][entry.col]
-		) {
+		if (entry.prevValue !== 0 && entry.prevValue !== this.solution[entry.row][entry.col]) {
 			newErrors.add(`${entry.row},${entry.col}`);
 		} else {
 			newErrors.delete(`${entry.row},${entry.col}`);
@@ -218,15 +222,15 @@ export class NinesGame {
 	}
 
 	cellClasses(row: number, col: number): string {
-		const isSelected =
-			this.selectedCell?.row === row && this.selectedCell?.col === col;
+		const isSelected = this.selectedCell?.row === row && this.selectedCell?.col === col;
 		const isError = this.errorCells.has(`${row},${col}`);
 		const isInitial = this.initial[row][col] !== 0;
 		const value = this.grid[row][col];
 
 		// Highlight cells with same number as selected
-		const selectedValue =
-			this.selectedCell ? this.grid[this.selectedCell.row][this.selectedCell.col] : 0;
+		const selectedValue = this.selectedCell
+			? this.grid[this.selectedCell.row][this.selectedCell.col]
+			: 0;
 		const isSameNumber = value !== 0 && selectedValue !== 0 && value === selectedValue;
 
 		// Highlight same row/col/box as selected

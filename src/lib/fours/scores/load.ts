@@ -3,11 +3,13 @@ import type { FoursScore } from '../types';
 
 export async function loadScore(puzzleUri: string, userDid: string): Promise<FoursScore | null> {
 	try {
-		const data = await ok(rpc.get('games.atmo.fours.score.listRecords', {
-			params: { actor: toActor(userDid), puzzleUri, limit: 1 }
-		}));
+		const data = await ok(
+			rpc.get('games.atmo.score.listRecords', {
+				params: { actor: toActor(userDid), puzzleUri, limit: 1 }
+			})
+		);
 
-		const record = data.records[0]?.record;
+		const record = data.records[0]?.value;
 		if (!record) return null;
 
 		return {

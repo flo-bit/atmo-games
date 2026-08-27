@@ -1,20 +1,27 @@
 {
+	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "atmo-games",
 	"main": ".svelte-kit/cloudflare/_worker.js",
-	"compatibility_date": "2025-12-25",
-	"compatibility_flags": ["nodejs_compat_v2"],
+	"compatibility_date": "2026-08-15",
+	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
-	// Set OAUTH_PUBLIC_URL to your production domain when deploying
-	"vars": {
-		"OAUTH_PUBLIC_URL": "https://atmo.games",
-		"USE_BSKY_LIKES": "false"
+	"observability": {
+		"enabled": true
 	},
+	"vars": {
+		"ORIGIN": "https://atmo.games"
+	},
+	"routes": [
+		{
+			"pattern": "atmo.games",
+			"custom_domain": true
+		}
+	],
 	"kv_namespaces": [
 		{ "binding": "OAUTH_SESSIONS", "id": "2cbd49677f7c40cc8659586681a31d6e" },
-		{ "binding": "OAUTH_STATES", "id": "dcaeea11d9ba4562ab891b4409c3abb0" },
-		{ "binding": "PLACE_KV", "id": "674d6600a117415dbed27cab871b8375", "remote": false }
+		{ "binding": "OAUTH_STATES", "id": "dcaeea11d9ba4562ab891b4409c3abb0" }
 	]
 }

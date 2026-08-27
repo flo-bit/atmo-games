@@ -1,33 +1,18 @@
-const CONSTELLATION_BASE = 'https://constellation.microcosm.blue';
-
-type BacklinkResult = {
-	total: number;
-	records: { did: string; collection: string; rkey: string }[];
-	cursor?: string | null;
-};
+import type { Did } from '@atcute/lexicons';
+import { listBacklinks } from '@svelte-atproto/oauth/helper';
 
 export async function getScoreBacklink(
 	puzzleUri: string,
 	userDid: string
 ): Promise<{ collection: string; rkey: string } | null> {
-	const params = new URLSearchParams({
-		subject: puzzleUri,
-		source: 'games.atmo.fours.score:puzzle.uri',
-		did: userDid,
-		limit: '1'
-	});
-
-	const res = await fetch(
-		`${CONSTELLATION_BASE}/xrpc/blue.microcosm.links.getBacklinks?${params}`
+	const page = await listBacklinks(
+		puzzleUri,
+		{
+			collection: 'games.atmo.fours.score',
+			path: '.puzzle.uri'
+		},
+		{ did: userDid as Did, limit: 1 }
 	);
-
-	if (!res.ok) return null;
-
-	const data: BacklinkResult = await res.json();
-	if (data.records.length === 0) return null;
-
-	return {
-		collection: data.records[0].collection,
-		rkey: data.records[0].rkey
-	};
+	const record = page?.records[0];
+	return record ? { collection: record.collection, rkey: record.rkey } : null;
 }

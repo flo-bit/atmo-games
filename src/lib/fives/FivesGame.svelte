@@ -29,6 +29,7 @@
 
 	// svelte-ignore state_referenced_locally
 	let hasNotifiedEnd = $state(!!score);
+	// svelte-ignore state_referenced_locally
 	let showEndScreen = $state(!!score);
 	let copied = $state(false);
 
@@ -39,7 +40,9 @@
 		try {
 			const saved = localStorage.getItem('fives-stats');
 			if (saved) return JSON.parse(saved);
-		} catch {}
+		} catch {
+			// Ignore invalid or unavailable local storage.
+		}
 		return { played: 0, won: 0, streak: 0, maxStreak: 0, guessDistribution: [0, 0, 0, 0, 0, 0] };
 	}
 
@@ -63,7 +66,9 @@
 			await navigator.clipboard.writeText(text);
 			copied = true;
 			setTimeout(() => (copied = false), 2000);
-		} catch {}
+		} catch {
+			// Clipboard access is optional.
+		}
 	}
 
 	$effect(() => {
@@ -95,9 +100,12 @@
 			revealedCols = [false, false, false, false, false];
 			for (let col = 0; col < WORD_LENGTH; col++) {
 				timeouts.push(
-					setTimeout(() => {
-						revealedCols[col] = true;
-					}, col * 300 + 250)
+					setTimeout(
+						() => {
+							revealedCols[col] = true;
+						},
+						col * 300 + 250
+					)
 				);
 			}
 		} else {
@@ -156,7 +164,7 @@
 			transition:fade={{ duration: 200 }}
 		>
 			<span
-				class="rounded-full bg-base-800 px-4 py-2 text-sm font-bold text-white shadow-lg dark:bg-base-200 dark:text-base-900"
+				class="bg-base-800 dark:bg-base-200 dark:text-base-900 rounded-full px-4 py-2 text-sm font-bold text-white shadow-lg"
 			>
 				{game.feedback}
 			</span>
@@ -170,25 +178,23 @@
 			{@const isCurrent = rowIndex === game.guessResults.length && game.gameState === 'playing'}
 			{@const isRevealing = game.revealRow === rowIndex}
 			{@const isShaking = game.shakeRow === rowIndex}
-			<div
-				class="flex justify-center gap-[5px] {isShaking ? 'shake' : ''}"
-			>
+			<div class="flex justify-center gap-[5px] {isShaking ? 'shake' : ''}">
 				{#each Array(WORD_LENGTH) as _, colIndex (colIndex)}
 					{@const submittedResult = isSubmitted ? game.guessResults[rowIndex] : null}
 					{@const letter = isSubmitted
-						? submittedResult?.word[colIndex] ?? ''
+						? (submittedResult?.word[colIndex] ?? '')
 						: isCurrent
-							? game.currentGuess[colIndex] ?? ''
+							? (game.currentGuess[colIndex] ?? '')
 							: ''}
 					{@const result = submittedResult?.results[colIndex] ?? null}
 					{@const showColor = isSubmitted && (!isRevealing || revealedCols[colIndex])}
 					<div
 						class="flex h-[62px] w-[62px] items-center justify-center rounded-lg text-2xl font-bold uppercase
 							{showColor && result
-								? tileColorClass(result)
-								: letter
-									? 'bg-base-200 dark:bg-base-700'
-									: 'bg-base-100 dark:bg-base-800'}
+							? tileColorClass(result)
+							: letter
+								? 'bg-base-200 dark:bg-base-700'
+								: 'bg-base-100 dark:bg-base-800'}
 							{isRevealing ? 'flip-tile' : ''}"
 						style={isRevealing ? `animation-delay: ${colIndex * 0.3}s;` : ''}
 					>
@@ -207,7 +213,11 @@
 					{#each row as key (key)}
 						<button
 							class="flex h-[58px] cursor-pointer items-center justify-center rounded-md font-bold
-								{key === 'ENTER' ? 'min-w-[100px] px-3 text-base bg-base-800 text-base-100 dark:bg-base-200 dark:text-base-800' : key === '⌫' ? 'min-w-[50px] px-2 text-lg ' + keyColorClass(key) : 'min-w-[44px] text-lg ' + keyColorClass(key)}"
+								{key === 'ENTER'
+								? 'bg-base-800 text-base-100 dark:bg-base-200 dark:text-base-800 min-w-[100px] px-3 text-base'
+								: key === '⌫'
+									? 'min-w-[50px] px-2 text-lg ' + keyColorClass(key)
+									: 'min-w-[44px] text-lg ' + keyColorClass(key)}"
 							onclick={() => {
 								if (key === 'ENTER') {
 									game.submitGuess();
@@ -229,52 +239,54 @@
 	<!-- End Screen -->
 	{#if showEndScreen}
 		<div
-			class="mt-4 flex w-full max-w-[350px] flex-col items-center gap-6 rounded-2xl bg-base-100 p-6 dark:bg-base-800"
+			class="bg-base-100 dark:bg-base-800 mt-4 flex w-full max-w-[350px] flex-col items-center gap-6 rounded-2xl p-6"
 			transition:fade={{ duration: 300 }}
 		>
-			<h2 class="text-2xl font-bold text-base-900 dark:text-base-100">
+			<h2 class="text-base-900 dark:text-base-100 text-2xl font-bold">
 				{game.gameState === 'won' ? 'Nice!' : 'Better luck next time'}
 			</h2>
 
-			<p class="text-lg font-semibold text-base-600 dark:text-base-400">
-				The word was <span class="font-black text-base-900 dark:text-base-100">{answer}</span>
+			<p class="text-base-600 dark:text-base-400 text-lg font-semibold">
+				The word was <span class="text-base-900 dark:text-base-100 font-black">{answer}</span>
 			</p>
 
 			<!-- Stats -->
 			<div class="grid w-full grid-cols-4 gap-3 text-center">
 				<div>
-					<p class="text-2xl font-black text-base-900 dark:text-base-100">{stats.played}</p>
-					<p class="text-xs text-base-500 dark:text-base-400">Played</p>
+					<p class="text-base-900 dark:text-base-100 text-2xl font-black">{stats.played}</p>
+					<p class="text-base-500 dark:text-base-400 text-xs">Played</p>
 				</div>
 				<div>
-					<p class="text-2xl font-black text-base-900 dark:text-base-100">
+					<p class="text-base-900 dark:text-base-100 text-2xl font-black">
 						{stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0}%
 					</p>
-					<p class="text-xs text-base-500 dark:text-base-400">Win %</p>
+					<p class="text-base-500 dark:text-base-400 text-xs">Win %</p>
 				</div>
 				<div>
-					<p class="text-2xl font-black text-base-900 dark:text-base-100">{stats.streak}</p>
-					<p class="text-xs text-base-500 dark:text-base-400">Streak</p>
+					<p class="text-base-900 dark:text-base-100 text-2xl font-black">{stats.streak}</p>
+					<p class="text-base-500 dark:text-base-400 text-xs">Streak</p>
 				</div>
 				<div>
-					<p class="text-2xl font-black text-base-900 dark:text-base-100">{stats.maxStreak}</p>
-					<p class="text-xs text-base-500 dark:text-base-400">Best</p>
+					<p class="text-base-900 dark:text-base-100 text-2xl font-black">{stats.maxStreak}</p>
+					<p class="text-base-500 dark:text-base-400 text-xs">Best</p>
 				</div>
 			</div>
 
 			<!-- Guess Distribution -->
 			<div class="w-full">
-				<p class="mb-2 text-sm font-semibold text-base-600 dark:text-base-400">Guess Distribution</p>
+				<p class="text-base-600 dark:text-base-400 mb-2 text-sm font-semibold">
+					Guess Distribution
+				</p>
 				<div class="flex flex-col gap-1">
 					{#each stats.guessDistribution as count, i (i)}
 						{@const maxCount = Math.max(...stats.guessDistribution, 1)}
 						<div class="flex items-center gap-2">
-							<span class="w-3 text-xs font-bold text-base-500 dark:text-base-400">{i + 1}</span>
+							<span class="text-base-500 dark:text-base-400 w-3 text-xs font-bold">{i + 1}</span>
 							<div
 								class="flex h-5 items-center justify-end rounded-sm px-1.5 text-xs font-bold text-white
 									{game.gameState === 'won' && game.guessResults.length === i + 1
-										? 'bg-green-600'
-										: 'bg-base-500 dark:bg-base-600'}"
+									? 'bg-green-600'
+									: 'bg-base-500 dark:bg-base-600'}"
 								style="width: {Math.max((count / maxCount) * 100, 8)}%"
 							>
 								{count}

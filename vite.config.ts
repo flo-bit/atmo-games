@@ -2,10 +2,12 @@ import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { DEV_PORT } from './src/lib/atproto/port';
-import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss(), sveltekitOG()],
+	plugins: [sveltekit(), tailwindcss()],
+	ssr: {
+		resolve: { conditions: ['workerd', 'module', 'node', 'development|production'] }
+	},
 	server: {
 		allowedHosts: [],
 		host: '127.0.0.1',

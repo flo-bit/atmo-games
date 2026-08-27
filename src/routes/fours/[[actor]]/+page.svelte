@@ -20,14 +20,16 @@
 
 {#if showOverlay && isMainDaily && isToday}
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-base-50 dark:bg-base-950"
+		class="bg-base-50 dark:bg-base-950 fixed inset-0 z-50 flex items-center justify-center"
 		out:fly={{ y: -window.innerHeight, duration: 150, opacity: 1, easing: cubicIn }}
 	>
 		<div class="flex flex-col items-center gap-16">
-			<h1 class="text-4xl font-bold text-base-800 dark:text-base-200">Fours</h1>
+			<h1 class="text-base-800 dark:text-base-200 text-4xl font-bold">Fours</h1>
 			<div class="flex w-48 flex-col gap-3">
 				<Button size="lg" class="w-full" onclick={() => (showOverlay = false)}>Play daily</Button>
-				<Button size="lg" variant="secondary" class="w-full" href="/fours/create">Create puzzle</Button>
+				<Button size="lg" variant="secondary" class="w-full" href="/fours/create"
+					>Create puzzle</Button
+				>
 			</div>
 		</div>
 	</div>
@@ -42,23 +44,30 @@
 <FoursPlayPage>
 	{#snippet header()}
 		{#if isMainDaily}
-			<h1 class="text-2xl font-bold text-base-800 dark:text-base-200">Fours</h1>
-			<span class="mt-1 text-xs text-base-400 dark:text-base-500">
+			<h1 class="text-base-800 dark:text-base-200 text-2xl font-bold">Fours</h1>
+			<span class="text-base-400 dark:text-base-500 mt-1 text-xs">
 				{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
 			</span>
-			<span class="mt-1 flex items-center gap-1 text-xs text-base-400 dark:text-base-500">
-				by <Avatar src={avatar} alt={handle} class="size-4" /> {handle}
+			<span class="text-base-400 dark:text-base-500 mt-1 flex items-center gap-1 text-xs">
+				by <Avatar src={avatar} alt={handle} class="size-4" />
+				{handle}
 			</span>
 		{:else}
-			<h1 class="flex items-center gap-2 text-2xl font-bold text-base-800 dark:text-base-200">
-				Fours by <Avatar src={feedAvatar} alt={feedHandle} class="size-8" /> {feedHandle}
+			<h1 class="text-base-800 dark:text-base-200 flex items-center gap-2 text-2xl font-bold">
+				Fours by <Avatar src={feedAvatar} alt={feedHandle} class="size-8" />
+				{feedHandle}
 			</h1>
-			<span class="mt-1 text-xs text-base-400 dark:text-base-500">
-				puzzle {puzzleIndex}/{puzzleCount} &middot; {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+			<span class="text-base-400 dark:text-base-500 mt-1 text-xs">
+				puzzle {puzzleIndex}/{puzzleCount} &middot; {new Date().toLocaleDateString('en-US', {
+					month: 'long',
+					day: 'numeric',
+					year: 'numeric'
+				})}
 			</span>
 			{#if handle !== feedHandle}
-				<span class="mt-1 flex items-center gap-1 text-xs text-base-400 dark:text-base-500">
-					puzzle by <Avatar src={avatar} alt={handle} class="size-4" /> {handle}
+				<span class="text-base-400 dark:text-base-500 mt-1 flex items-center gap-1 text-xs">
+					puzzle by <Avatar src={avatar} alt={handle} class="size-4" />
+					{handle}
 				</span>
 			{/if}
 		{/if}

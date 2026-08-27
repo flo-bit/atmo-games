@@ -1,7 +1,9 @@
 #!/usr/bin/env npx tsx
 import type {} from '@atcute/atproto';
-import { Client, CredentialManager } from '@atcute/client';
-import * as TID from '@atcute/tid';
+import type {} from '../../src/lib/contrail/types/index.js';
+import { Client } from '@atcute/client';
+import { PasswordSession } from '@atcute/password-session';
+import { createTID } from '@svelte-atproto/oauth/helper';
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
@@ -25,7 +27,7 @@ interface Config {
 	allowDaily: boolean;
 }
 
-function usage(): never {
+function usage(exitCode = 1): never {
 	console.log(`
 Usage: npx tsx scripts/fours/publish-puzzles.ts [options]
 
@@ -39,7 +41,7 @@ Optional:
   --dry-run      Validate puzzles without publishing
   --help         Show this help
 `);
-	process.exit(1);
+	process.exit(exitCode);
 }
 
 function parseArgs(): Config {
@@ -50,7 +52,7 @@ function parseArgs(): Config {
 	};
 	const has = (flag: string) => args.includes(flag);
 
-	if (has('--help') || has('-h')) usage();
+	if (has('--help') || has('-h')) usage(0);
 
 	const handle = get('--handle');
 	const appPassword = get('--password');
@@ -73,7 +75,7 @@ function parseArgs(): Config {
 		appPassword: appPassword ?? '',
 		dir,
 		dryRun,
-		allowDaily,
+		allowDaily
 	};
 }
 
@@ -153,35 +155,38 @@ async function main() {
 
 	// authenticate
 	console.log(`Logging in as ${config.handle}...`);
-	const manager = new CredentialManager({ service: 'https://bsky.social' });
-	await manager.login({ identifier: config.handle, password: config.appPassword });
-	const did = manager.session!.did;
+	const session = await PasswordSession.login({
+		service: 'https://bsky.social',
+		identifier: config.handle,
+		password: config.appPassword
+	});
+	const did = session.did;
 	console.log(`Authenticated as ${did}`);
 
-	const client = new Client({ handler: manager });
+	const client = new Client({ handler: session });
 
 	// publish each puzzle
 	const uris: string[] = [];
 
 	for (let i = 0; i < puzzles.length; i++) {
 		const { filename, puzzle } = puzzles[i];
-		const rkey = TID.now();
+		const rkey = createTID();
 
 		const record = {
 			...puzzle,
 			createdAt: new Date().toISOString(),
-			allowDaily: config.allowDaily,
+			allowDaily: config.allowDaily
 		};
 
 		try {
 			await client.post('com.atproto.repo.putRecord', {
 				input: {
-					repo: did as string,
+					repo: did,
 					collection: 'games.atmo.fours.puzzle',
 					rkey,
-					record,
-				},
-			} as any);
+					record
+				}
+			});
 
 			const uri = `at://${did}/games.atmo.fours.puzzle/${rkey}`;
 			uris.push(uri);
@@ -204,12 +209,12 @@ async function main() {
 	try {
 		const resp = await client.get('com.atproto.repo.getRecord', {
 			params: {
-				repo: did as string,
+				repo: did,
 				collection: 'games.atmo.fours.puzzleList',
-				rkey: 'self',
-			},
-		} as any);
-		const value = (resp as any).data?.value;
+				rkey: 'self'
+			}
+		});
+		const value = resp.data.value;
 		if (value && Array.isArray(value.puzzles)) {
 			existingPuzzles = value.puzzles;
 		}
@@ -221,12 +226,12 @@ async function main() {
 
 	await client.post('com.atproto.repo.putRecord', {
 		input: {
-			repo: did as string,
+			repo: did,
 			collection: 'games.atmo.fours.puzzleList',
 			rkey: 'self',
-			record: { puzzles: allPuzzles },
-		},
-	} as any);
+			record: { puzzles: allPuzzles }
+		}
+	});
 
 	console.log(
 		`Puzzle list updated: ${existingPuzzles.length} existing + ${uris.length} new = ${allPuzzles.length} total`

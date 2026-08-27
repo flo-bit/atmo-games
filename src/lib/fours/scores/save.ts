@@ -2,7 +2,6 @@ import { user, putRecord, createTID } from '$lib/atproto';
 import type { FoursScore } from '../types';
 import type { FoursScoreRecord } from './types';
 import { saveScoreLocal } from './idb';
-import { notifyOfUpdate } from '../contrail';
 
 export async function saveScore(puzzleUri: string, score: FoursScore): Promise<void> {
 	const rkey = createTID();
@@ -24,7 +23,6 @@ export async function saveScore(puzzleUri: string, score: FoursScore): Promise<v
 				rkey,
 				record
 			});
-			notifyOfUpdate(`at://${user.did}/games.atmo.fours.score/${rkey}`);
 		} catch (e) {
 			console.error('Failed to save score to PDS:', e);
 		}

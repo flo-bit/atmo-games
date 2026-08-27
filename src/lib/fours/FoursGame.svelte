@@ -31,7 +31,7 @@
 </script>
 
 <div class="relative flex w-full flex-col gap-4 px-2 py-4 sm:px-4">
-	<p class="text-center text-sm font-semibold text-base-700 dark:text-base-300">
+	<p class="text-base-700 dark:text-base-300 text-center text-sm font-semibold">
 		Find four groups of four!
 	</p>
 
@@ -43,16 +43,14 @@
 				]} col-span-4 flex flex-col items-center justify-center overflow-hidden rounded-lg text-center"
 			>
 				<span class="text-base font-extrabold sm:text-2xl">{group.category}</span>
-				<span class="text-sm leading-tight font-semibold sm:text-lg"
-					>{group.words.join(', ')}</span
-				>
+				<span class="text-sm leading-tight font-semibold sm:text-lg">{group.words.join(', ')}</span>
 			</div>
 		{/each}
 
 		{#each game.remainingWords as word (word)}
 			<button
 				animate:flip={{ duration: 400 }}
-				class="aspect-square flex cursor-pointer items-center justify-center overflow-hidden rounded-lg px-1 text-center text-sm leading-tight font-extrabold break-all hyphens-auto uppercase sm:text-lg {game.tileClasses(
+				class="flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-lg px-1 text-center text-sm leading-tight font-extrabold break-all hyphens-auto uppercase sm:text-lg {game.tileClasses(
 					word
 				)} {game.shakingWords.includes(word) ? 'shake' : ''} {game.bouncingWords.includes(word)
 					? 'bounce'
@@ -73,7 +71,7 @@
 			transition:fade={{ duration: 300 }}
 		>
 			<span
-				class="rounded-full bg-base-800 px-3 py-1 text-sm font-semibold text-white shadow-lg dark:bg-base-200 dark:text-base-900"
+				class="bg-base-800 dark:bg-base-200 dark:text-base-900 rounded-full px-3 py-1 text-sm font-semibold text-white shadow-lg"
 			>
 				{game.feedback}
 			</span>
@@ -82,42 +80,44 @@
 
 	<div class="flex items-center justify-center gap-1 text-base">
 		{#each Array(4) as _, i (i)}
-			<span class="{i < 4 - game.mistakes ? 'opacity-100' : 'opacity-25'} text-accent-500">&hearts;</span>
+			<span class="{i < 4 - game.mistakes ? 'opacity-100' : 'opacity-25'} text-accent-500"
+				>&hearts;</span
+			>
 		{/each}
 	</div>
 
 	<div class="flex flex-wrap items-center justify-center gap-2">
 		{#if game.gameState === 'playing'}
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
 				onclick={() => game.shuffleRemaining()}
 				disabled={game.isSubmitting}
 			>
 				Shuffle
 			</button>
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
 				onclick={() => game.showHint()}
 				disabled={game.isSubmitting}
 			>
 				Hint
 			</button>
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
 				onclick={() => game.deselectAll()}
 				disabled={game.selectedWords.length === 0 || game.isSubmitting}
 			>
 				Deselect All
 			</button>
 			<button
-				class="cursor-pointer rounded-full border border-base-400 px-5 py-2 text-sm font-semibold text-base-700 hover:bg-base-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700"
+				class="border-base-400 text-base-700 hover:bg-base-200 dark:border-base-500 dark:text-base-300 dark:hover:bg-base-700 cursor-pointer rounded-full border px-5 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
 				onclick={() => game.submitGuess()}
 				disabled={game.selectedWords.length !== 4 || game.isSubmitting}
 			>
 				Submit
 			</button>
 		{:else}
-			<span class="text-sm text-base-500 dark:text-base-400">
+			<span class="text-base-500 dark:text-base-400 text-sm">
 				Next puzzle in {game.countdown}
 			</span>
 		{/if}

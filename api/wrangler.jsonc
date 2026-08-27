@@ -1,0 +1,25 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "atmo-games-api",
+	"main": "src/worker.ts",
+	"compatibility_date": "2026-08-15",
+	"observability": {
+		"enabled": true
+	},
+	"routes": [
+		{
+			"pattern": "api.atmo.games",
+			"custom_domain": true
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "atmo-games-contrail-g20260827",
+			"database_id": "REPLACE_WITH_D1_DATABASE_ID"
+		}
+	],
+	"triggers": {
+		"crons": ["*/1 * * * *"]
+	}
+}

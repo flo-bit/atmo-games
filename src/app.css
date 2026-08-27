@@ -2,10 +2,11 @@
 
 @plugin '@tailwindcss/forms';
 
-@source "../node_modules/@foxui";
+@import '@foxui/core/theme.css';
+
+@source '../node_modules/@foxui';
 
 @custom-variant dark (&:is(.dark *));
-
 
 @theme inline {
 	--color-base-50: var(--base-50);

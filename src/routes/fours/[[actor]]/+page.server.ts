@@ -18,14 +18,16 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 	// Get puzzle list
 	let listData;
 	try {
-		listData = await ok(rpc.get('games.atmo.fours.puzzleList.getRecord', {
-			params: { uri: toUri(`at://${did}/games.atmo.fours.puzzleList/self`) }
-		}));
+		listData = await ok(
+			rpc.get('games.atmo.puzzleList.getRecord', {
+				params: { uri: toUri(`at://${did}/games.atmo.fours.puzzleList/self`) }
+			})
+		);
 	} catch {
 		error(404, 'No puzzle list found');
 	}
 
-	const puzzles = listData.record?.puzzles;
+	const puzzles = listData.value?.puzzles;
 	if (!puzzles?.length) {
 		error(404, 'Puzzle list is empty');
 	}
@@ -50,14 +52,16 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 	// Fetch puzzle via Contrail
 	let puzzleData;
 	try {
-		puzzleData = await ok(rpc.get('games.atmo.fours.puzzle.getRecord', {
-			params: { uri: toUri(puzzleUri), profiles: true }
-		}));
+		puzzleData = await ok(
+			rpc.get('games.atmo.puzzle.getRecord', {
+				params: { uri: toUri(puzzleUri), profiles: true }
+			})
+		);
 	} catch {
 		error(404, 'Puzzle not found');
 	}
 
-	if (!puzzleData.record) {
+	if (!puzzleData.value) {
 		error(404, 'Puzzle not found');
 	}
 
@@ -66,8 +70,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 	const authorProfile = puzzleData.profiles?.find((p) => p.did === puzzleData.did);
 	if (authorProfile) {
 		let authorAvatar: string | undefined;
-		if (authorProfile.record?.avatar) {
-			authorAvatar = avatarUrl(puzzleData.did, authorProfile.record.avatar as { ref: { $link: string } });
+		if (authorProfile.value?.avatar) {
+			authorAvatar = avatarUrl(puzzleData.did, authorProfile.value.avatar);
 		}
 		puzzleAuthor = { handle: authorProfile.handle ?? puzzleData.did, avatar: authorAvatar };
 	} else if (puzzleData.did === did) {
@@ -76,7 +80,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 		puzzleAuthor = await resolveActor(puzzleData.did);
 	}
 
-	const puzzle = puzzleData.record as unknown as FoursPuzzle;
+	const puzzle = puzzleData.value as unknown as FoursPuzzle;
 	const score = locals.did ? await loadScore(puzzleUri, locals.did) : null;
 
 	const todayRkey = todayUri.split('/').pop()!;

@@ -21,8 +21,14 @@
 		if (!serverScore) {
 			try {
 				const entry = await getScoreLocal(puzzleUri);
-				if (entry) localScore = { guesses: entry.record.guesses.map((g) => g.words), won: entry.record.state === 'games.atmo.fours.score#won' };
-			} catch { /* ignored */ }
+				if (entry)
+					localScore = {
+						guesses: entry.record.guesses.map((g) => g.words),
+						won: entry.record.state === 'games.atmo.fours.score#won'
+					};
+			} catch {
+				/* ignored */
+			}
 		}
 	});
 

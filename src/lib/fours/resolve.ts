@@ -5,18 +5,17 @@ export const DEFAULT_HANDLE = 'atmo.games';
 export async function resolveActor(
 	actor: string
 ): Promise<{ did: string; handle: string; avatar?: string }> {
-	const data = await ok(rpc.get('games.atmo.getProfile', {
-		params: { actor: toActor(actor) }
-	}));
-
-	let avatar: string | undefined;
-	if (data.record?.avatar) {
-		avatar = avatarUrl(data.did, data.record.avatar as { ref: { $link: string } });
-	}
+	const data = await ok(
+		rpc.get('games.atmo.getProfile', {
+			params: { actor: toActor(actor) }
+		})
+	);
+	const profile = data.profiles.find((entry) => entry.collection === 'app.bsky.actor.profile');
+	if (!profile) throw new Error(`Profile not found: ${actor}`);
 
 	return {
-		did: data.did,
-		handle: data.handle ?? actor,
-		avatar
+		did: profile.did,
+		handle: profile.handle ?? actor,
+		avatar: profile.value?.avatar ? avatarUrl(profile.did, profile.value.avatar) : undefined
 	};
 }
